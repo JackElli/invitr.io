@@ -9,13 +9,13 @@ import (
 	"go.uber.org/zap"
 )
 
-func main() {
-	// This microservice holds all of the info about the users
-	// currently in the system
+// This microservice holds all of the info about the users
+// currently in the system
 
-	// it should be able to add, remove, edit users
-	// and should be able to pass info across different
-	// microservices when required.
+// it should be able to add, remove, edit users
+// and should be able to pass info across different
+// microservices when required.
+func main() {
 
 	logger, _ := zap.NewProduction()
 	defer logger.Sync()

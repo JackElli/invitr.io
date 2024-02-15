@@ -3,8 +3,8 @@ package endpoints
 import (
 	"database/sql"
 	"users/endpoints/user"
-	"users/managers/usermgr"
 	"users/responder"
+	"users/usermgr"
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"

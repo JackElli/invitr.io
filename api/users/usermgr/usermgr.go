@@ -11,6 +11,9 @@ import (
 type UserStorer interface {
 	Get(id string) (*User, error)
 	Insert(user *User) (*User, error)
+	Remove(userId string) error
+
+	// Add these in later (not needed for now)
 	// Query(querystr string, options *gocb.QueryOptions) ([]Grumble, error)
 	// Update(id string, grumble *Grumble) error
 }
@@ -72,4 +75,13 @@ func (us *UserStore) Insert(user *User) (*User, error) {
 	rUser.Username = user.Username
 
 	return &rUser, err
+}
+
+// Remove removes a user from the db
+func (us *UserStore) Remove(userId string) error {
+	query := fmt.Sprintf("DELETE FROM users WHERE id='%s'", userId)
+
+	_, err := us.db.Query(query)
+
+	return err
 }

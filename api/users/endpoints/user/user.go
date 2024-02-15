@@ -3,16 +3,16 @@ package user
 import (
 	"encoding/json"
 	"net/http"
-	"users/managers/usermgr"
 	"users/responder"
+	"users/usermgr"
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
 )
 
 const (
-	ROOT     = "/user"
-	GET_USER = ROOT + "/{userId}"
+	ROOT = "/user"
+	USER = ROOT + "/{userId}"
 )
 
 type UserMgr struct {
@@ -65,7 +65,32 @@ func (mgr *UserMgr) NewUser() func(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
+// RemoveUser removes a user from the db given a userId
+func (mgr *UserMgr) RemoveUser() func(w http.ResponseWriter, req *http.Request) {
+	return func(w http.ResponseWriter, req *http.Request) {
+		userId := mux.Vars(req)["userId"]
+
+		err := mgr.UserStore.Remove(userId)
+		if err != nil {
+			mgr.Responder.Error(w, 400, err)
+			return
+		}
+
+		// maybe we could have a unified way of sending
+		// responses back by using a struct
+		// something like
+		// {
+		//   message: "hello"
+		// }
+
+		// done this way to pass by ref
+		message := "Successfully removed user."
+		mgr.Responder.Respond(w, http.StatusAccepted, &message)
+	}
+}
+
 func (mgr *UserMgr) Register() {
-	mgr.Router.HandleFunc(GET_USER, mgr.GetUser()).Methods("GET")
+	mgr.Router.HandleFunc(USER, mgr.GetUser()).Methods("GET")
+	mgr.Router.HandleFunc(USER, mgr.RemoveUser()).Methods("DELETE")
 	mgr.Router.HandleFunc(ROOT, mgr.NewUser()).Methods("POST")
 }
