@@ -2,6 +2,7 @@ package user
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"users/responder"
 	"users/usermgr"
@@ -61,7 +62,7 @@ func (mgr *UserMgr) NewUser() func(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		mgr.Responder.Respond(w, http.StatusCreated, &user)
+		mgr.Responder.Respond(w, http.StatusCreated, user)
 	}
 }
 
@@ -70,7 +71,18 @@ func (mgr *UserMgr) RemoveUser() func(w http.ResponseWriter, req *http.Request) 
 	return func(w http.ResponseWriter, req *http.Request) {
 		userId := mux.Vars(req)["userId"]
 
-		err := mgr.UserStore.Remove(userId)
+		user, err := mgr.UserStore.Get(userId)
+		if err != nil {
+			mgr.Responder.Error(w, 500, err)
+			return
+		}
+
+		if user == nil {
+			mgr.Responder.Error(w, 404, errors.New("no users exist with that id"))
+			return
+		}
+
+		err = mgr.UserStore.Remove(userId)
 		if err != nil {
 			mgr.Responder.Error(w, 400, err)
 			return
