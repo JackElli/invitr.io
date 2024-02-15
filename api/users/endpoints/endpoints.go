@@ -12,6 +12,8 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+const database = "users"
+
 type Endpoints struct {
 	Logger *zap.Logger
 }
@@ -25,17 +27,18 @@ func NewEndpointsMgr(logger *zap.Logger) *Endpoints {
 func (e *Endpoints) SetupEndpoints(env string, r *mux.Router) error {
 	responder := responder.NewResponder()
 
-	db, err := sql.Open("mysql", "todo:todosecret@tcp(db-users)/users")
+	db, err := sql.Open("mysql", "todo:todosecret@tcp(db-users)/"+database)
 	if err != nil {
 		return err
 	}
 
-	// set up managers, this is where we interact with the
-	// db in the backend
+	// set up stores, this is where we interact with the
+	// db
 	userStore := usermgr.NewUserStore(e.Logger, db)
 
-	// add endpoints to the router
 	public := r.PathPrefix("/").Subrouter()
+	// add endpoints to the router
 	_ = user.NewUserMgr(public, e.Logger, responder, userStore)
+
 	return nil
 }

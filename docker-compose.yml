@@ -3,6 +3,7 @@ services:
   users:
     image: users
     container_name: users
+    restart: always
     build:
       context: ./api/users
       dockerfile: Dockerfile

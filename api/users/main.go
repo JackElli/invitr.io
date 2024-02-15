@@ -10,8 +10,6 @@ import (
 )
 
 func main() {
-	// Need to make sure that database is set up correctly
-
 	// This microservice holds all of the info about the users
 	// currently in the system
 

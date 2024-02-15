@@ -1,6 +1,7 @@
 package user
 
 import (
+	"encoding/json"
 	"net/http"
 	"users/managers/usermgr"
 	"users/responder"
@@ -48,6 +49,23 @@ func (mgr *UserMgr) GetUser() func(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
+// NewUser adds a new user to the db
+func (mgr *UserMgr) NewUser() func(w http.ResponseWriter, req *http.Request) {
+	return func(w http.ResponseWriter, req *http.Request) {
+		var getuser usermgr.User
+		json.NewDecoder(req.Body).Decode(&getuser)
+
+		user, err := mgr.UserStore.Insert(&getuser)
+		if err != nil {
+			mgr.Responder.Error(w, 400, err)
+			return
+		}
+
+		mgr.Responder.Respond(w, http.StatusCreated, &user)
+	}
+}
+
 func (mgr *UserMgr) Register() {
 	mgr.Router.HandleFunc(GET_USER, mgr.GetUser()).Methods("GET")
+	mgr.Router.HandleFunc(ROOT, mgr.NewUser()).Methods("POST")
 }
