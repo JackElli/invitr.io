@@ -69,10 +69,14 @@ func (us *UserStore) Insert(user *User) (*User, error) {
 	query := fmt.Sprintf("INSERT INTO users (id, username) VALUES ('%s','%s')", id, user.Username)
 
 	_, err := us.db.Query(query)
+	if err != nil {
+		return nil, err
+	}
 
-	var rUser User
-	rUser.UserId = id.String()
-	rUser.Username = user.Username
+	rUser := User{
+		UserId:   id.String(),
+		Username: user.Username,
+	}
 
 	return &rUser, err
 }
