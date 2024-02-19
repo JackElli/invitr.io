@@ -3,9 +3,12 @@ services:
   users:
     image: users
     container_name: users
+    restart: always
     build:
       context: ./api/users
       dockerfile: Dockerfile
+    depends_on:
+      - db-users
     ports:
       - "3200:3200"
   db-users:
