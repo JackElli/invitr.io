@@ -62,14 +62,26 @@ func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request)
 			return
 		}
 
-		getinvite.QRCode = *qrcode
+		// We could possibly send it as a byte array
+		// but we'll need to unmarshal it properly
+		qrcodeBytes, _ := json.Marshal(*qrcode)
+		getinvite.QRCode = string(qrcodeBytes)
 		invite, err := mgr.InviteStore.Insert(&getinvite)
 		if err != nil {
 			mgr.Responder.Error(w, 400, err)
 			return
 		}
 
-		mgr.Responder.Respond(w, http.StatusCreated, invite)
+		inviteJSON := invitesmgr.InviteJSON{
+			Id:         invite.Id,
+			Organiser:  invite.Organiser,
+			Location:   invite.Location,
+			Date:       invite.Date,
+			QRCode:     *qrcode,
+			Passphrase: invite.Passphrase,
+		}
+
+		mgr.Responder.Respond(w, http.StatusCreated, inviteJSON)
 	}
 }
 
@@ -84,7 +96,19 @@ func (mgr *InviteMgr) GetInvite() func(w http.ResponseWriter, req *http.Request)
 			return
 		}
 
-		mgr.Responder.Respond(w, http.StatusOK, invite)
+		var qrcode invitesmgr.QRCode
+		json.Unmarshal([]byte(invite.QRCode), &qrcode)
+
+		inviteJSON := invitesmgr.InviteJSON{
+			Id:         invite.Id,
+			Organiser:  invite.Organiser,
+			Location:   invite.Location,
+			Date:       invite.Date,
+			QRCode:     qrcode,
+			Passphrase: invite.Passphrase,
+		}
+
+		mgr.Responder.Respond(w, http.StatusOK, inviteJSON)
 	}
 }
 

@@ -25,7 +25,7 @@ type InviteStore struct {
 
 func NewInviteStore(logger *zap.Logger, db *sql.DB) *InviteStore {
 	// need to create the table if it doesn't exist
-	_, err := db.Query("CREATE TABLE IF NOT EXISTS invites (id varchar(50) NOT NULL, organiser varchar(50) NOT NULL, location varchar(50) NOT NULL, date varchar(50) NOT NULL, qr_code blob NOT NULL, passphrase varchar(50) NOT NULL);")
+	_, err := db.Query("CREATE TABLE IF NOT EXISTS invites (id varchar(50) NOT NULL, organiser varchar(50) NOT NULL, location varchar(50) NOT NULL, date varchar(50) NOT NULL, qr_code varchar(1024) NOT NULL, passphrase varchar(50) NOT NULL);")
 
 	// will also need to create the pivot tables here too :)
 	if err != nil {
@@ -63,7 +63,10 @@ func (is *InviteStore) Get(id string) (*Invite, error) {
 // Insert adds an invite to the db
 func (is *InviteStore) Insert(invite *Invite) (*Invite, error) {
 	id, _ := uuid.NewV7()
-	query := fmt.Sprintf("INSERT INTO invites (id, organiser, location, date, qr_code, passphrase) VALUES ('%s','%s', '%s', '%s', '%b', '%s')", id, invite.Organiser, invite.Location, invite.Date, invite.QRCode, invite.Passphrase)
+
+	// TODO for the QR code, can we use a byte array instead of JSON string
+	// we will probably need to use %v for the format.
+	query := fmt.Sprintf("INSERT INTO invites (id, organiser, location, date, qr_code, passphrase) VALUES ('%s','%s', '%s', '%s', '%s', '%s')", id, invite.Organiser, invite.Location, invite.Date, invite.QRCode, invite.Passphrase)
 
 	_, err := is.db.Query(query)
 	if err != nil {
