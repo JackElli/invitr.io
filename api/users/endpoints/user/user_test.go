@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+
 	"testing"
 	"users/responder"
 	"users/usermgr"

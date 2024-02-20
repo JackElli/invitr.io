@@ -19,13 +19,27 @@ func NewResponder() *Respond {
 	return &Respond{}
 }
 
+// isNil returns whether a given interface is nil
+func isNil(i interface{}) bool {
+	iv := reflect.ValueOf(i)
+	if !iv.IsValid() {
+		return true
+	}
+	switch iv.Kind() {
+	case reflect.Ptr, reflect.Slice, reflect.Map, reflect.Func, reflect.Interface:
+		return iv.IsNil()
+	default:
+		return false
+	}
+}
+
 // Send a JSON response back
 func (r *Respond) Respond(w http.ResponseWriter, code int, response interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 
 	// if theres no response, send an empty object
-	if response == nil || reflect.ValueOf(response).IsNil() {
+	if response == nil || isNil(response) {
 		json.NewEncoder(w).Encode(make(map[string]interface{}))
 		return
 	}
