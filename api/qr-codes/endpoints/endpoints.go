@@ -6,8 +6,6 @@ import (
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
-
-	_ "github.com/go-sql-driver/mysql"
 )
 
 type Endpoints struct {
