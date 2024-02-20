@@ -34,9 +34,12 @@ services:
   invites:
     image: invites
     container_name: invites
+    restart: always
     build:
       context: ./api/invites
       dockerfile: Dockerfile
+    depends_on:
+      - db-invites
     ports:
       - "3202:3202"
   db-invites:

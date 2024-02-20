@@ -1,6 +1,6 @@
 package usermgr
 
 type User struct {
-	UserId   string
-	Username string
+	UserId   string `json:"userId"`
+	Username string `json:"username"`
 }

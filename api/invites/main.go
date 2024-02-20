@@ -1,6 +1,13 @@
 package main
 
-import "fmt"
+import (
+	"invites/endpoints"
+	"log"
+	"net/http"
+
+	"github.com/gorilla/mux"
+	"go.uber.org/zap"
+)
 
 // Need to make sure that database is set up correctly
 
@@ -20,5 +27,23 @@ import "fmt"
 // The event should hold info like date, place, who is organising etc..
 // We could also add links to buy things like flowers, drinks, food
 func main() {
-	fmt.Println("Hello invites!")
+	logger, _ := zap.NewProduction()
+	defer logger.Sync()
+
+	const ENVIRONMENT = "dev"
+
+	r := mux.NewRouter()
+
+	endpoints := endpoints.NewEndpointsMgr(logger)
+	err := endpoints.SetupEndpoints(ENVIRONMENT, r)
+	if err != nil {
+		logger.Error("Cannot setup endpoints", zap.Error(err))
+		return
+	}
+
+	logger.Info("Started invites api...")
+	err = http.ListenAndServe(":3202", http.Handler(r))
+	if err != nil {
+		log.Fatal("Cannot start server")
+	}
 }

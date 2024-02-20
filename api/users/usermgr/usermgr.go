@@ -43,21 +43,14 @@ func NewUserStore(logger *zap.Logger, db *sql.DB) *UserStore {
 // Get retrieves in this case a user from the db
 func (us *UserStore) Get(id string) (*User, error) {
 	query := fmt.Sprintf("SELECT id,username FROM users WHERE id='%s'", id)
-
-	var userid string
-	var username string
-
-	// we could use a User struct here
 	row := us.db.QueryRow(query)
 
-	switch err := row.Scan(&userid, &username); err {
+	var user User
+	switch err := row.Scan(&user.UserId, &user.Username); err {
 	case sql.ErrNoRows:
 		return nil, nil
 	case nil:
-		return &User{
-			UserId:   userid,
-			Username: username,
-		}, nil
+		return &user, nil
 	default:
 		return nil, err
 	}
@@ -73,12 +66,8 @@ func (us *UserStore) Insert(user *User) (*User, error) {
 		return nil, err
 	}
 
-	rUser := User{
-		UserId:   id.String(),
-		Username: user.Username,
-	}
-
-	return &rUser, err
+	user.UserId = id.String()
+	return user, err
 }
 
 // Remove removes a user from the db
