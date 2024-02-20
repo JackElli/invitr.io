@@ -11,8 +11,9 @@ import (
 )
 
 const (
-	ROOT   = "/invite"
-	INVITE = ROOT + "/{inviteId}"
+	QR_CODE_URL = "http://qr-codes:3201/qr-code"
+	ROOT        = "/invite"
+	INVITE      = ROOT + "/{inviteId}"
 )
 
 type InviteMgr struct {
@@ -35,7 +36,7 @@ func NewInviteMgr(router *mux.Router, logger *zap.Logger, responder responder.Re
 
 // generateQRCode fetches a QR code from the QR code microservice
 func generateQRCode() (*invitesmgr.QRCode, error) {
-	resp, err := http.Get("http://qr-codes:3201/qr-code")
+	resp, err := http.Get(QR_CODE_URL)
 	if err != nil {
 		return nil, err
 	}
