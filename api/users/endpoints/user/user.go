@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+
 	"users/responder"
 	"users/usermgr"
 
@@ -95,9 +96,8 @@ func (mgr *UserMgr) RemoveUser() func(w http.ResponseWriter, req *http.Request) 
 		//   message: "hello"
 		// }
 
-		// done this way to pass by ref
 		message := "Successfully removed user."
-		mgr.Responder.Respond(w, http.StatusAccepted, &message)
+		mgr.Responder.Respond(w, http.StatusAccepted, message)
 	}
 }
 

@@ -21,6 +21,15 @@ services:
       MARIADB_DATABASE: &dbname users
     volumes:
       - mariadb_data-users:/var/lib/mysql
+
+  qr-codes:
+    image: qr-codes
+    container_name: qr-codes
+    build:
+      context: ./api/qr-codes
+      dockerfile: Dockerfile
+    ports:
+      - "3201:3201"
   
   invites:
     image: invites
@@ -29,7 +38,7 @@ services:
       context: ./api/invites
       dockerfile: Dockerfile
     ports:
-      - "3201:3201"
+      - "3202:3202"
   db-invites:
     image: mariadb:11
     restart: unless-stopped
@@ -41,25 +50,6 @@ services:
     volumes:
       - mariadb_data-invites:/var/lib/mysql
 
-  qr-codes:
-    image: qr-codes
-    container_name: qr-codes
-    build:
-      context: ./api/qr-codes
-      dockerfile: Dockerfile
-    ports:
-      - "3202:3202"
-  db-qr-codes:
-    image: mariadb:11
-    restart: unless-stopped
-    environment:
-      MARIADB_USER: &dbuser todo
-      MARIADB_PASSWORD: &dbpass todosecret
-      MARIADB_ROOT_PASSWORD: iamroot
-      MARIADB_DATABASE: &dbname qr-codes
-    volumes:
-      - mariadb_data-qr-codes:/var/lib/mysql
-
   adminer:
     image: adminer:4-standalone
     ports:
@@ -68,6 +58,5 @@ services:
 volumes:
   mariadb_data-users:
   mariadb_data-invites:
-  mariadb_data-qr-codes:
 
 
