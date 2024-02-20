@@ -96,6 +96,11 @@ func (mgr *InviteMgr) GetInvite() func(w http.ResponseWriter, req *http.Request)
 			return
 		}
 
+		if invite == nil {
+			mgr.Responder.Respond(w, http.StatusOK, nil)
+			return
+		}
+
 		var qrcode invitesmgr.QRCode
 		json.Unmarshal([]byte(invite.QRCode), &qrcode)
 
