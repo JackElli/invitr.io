@@ -2,6 +2,9 @@ package endpoints
 
 import (
 	"database/sql"
+	"invites/endpoints/invite"
+	"invites/invitesmgr"
+	"invites/responder"
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
@@ -22,20 +25,20 @@ func NewEndpointsMgr(logger *zap.Logger) *Endpoints {
 }
 
 func (e *Endpoints) SetupEndpoints(env string, r *mux.Router) error {
-	// responder := responder.NewResponder()
+	responder := responder.NewResponder()
 
-	_, err := sql.Open("mysql", "todo:todosecret@tcp(db-invites)/"+database)
+	db, err := sql.Open("mysql", "todo:todosecret@tcp(db-invites)/"+database)
 	if err != nil {
 		return err
 	}
 
 	// set up stores, this is where we interact with the
 	// db
-	// inviteStore := invitesmgr.NewInviteStore(e.Logger, db)
+	inviteStore := invitesmgr.NewInviteStore(e.Logger, db)
 
-	// public := r.PathPrefix("/").Subrouter()
+	public := r.PathPrefix("/").Subrouter()
 	// add endpoints to the router
-	// _ = user.NewUserMgr(public, e.Logger, responder, userStore)
+	_ = invite.NewInviteMgr(public, e.Logger, responder, inviteStore)
 
 	return nil
 }
