@@ -19,6 +19,11 @@ The idea is to create a nice UI which organisers can log in to and create events
         "passphrase": "welcome"
         }
     ```
+4) To then see the invite send a GET request to 
+    ```
+    http://localhost:3202/invite/{ID}
+    ``` 
+    where the ID is the ID in the response from the previous request.
 
 ## Future work
 
