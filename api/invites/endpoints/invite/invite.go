@@ -51,7 +51,7 @@ func generateQRCode() (*invitestore.QRCode, error) {
 // NewInvite creates a new invite based on some user input
 func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
-		var getinvite invitestore.Invite
+		var getinvite invitestore.InviteDB
 		json.NewDecoder(req.Body).Decode(&getinvite)
 
 		// we need to generate a QR code, for this we need to
@@ -73,12 +73,14 @@ func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request)
 		}
 
 		inviteJSON := invitestore.InviteJSON{
-			Id:         invite.Id,
-			Organiser:  invite.Organiser,
-			Location:   invite.Location,
-			Date:       invite.Date,
-			QRCode:     *qrcode,
-			Passphrase: invite.Passphrase,
+			Invite: invitestore.Invite{
+				Id:         invite.Id,
+				Organiser:  invite.Organiser,
+				Location:   invite.Location,
+				Date:       invite.Date,
+				Passphrase: invite.Passphrase,
+			},
+			QRCode: *qrcode,
 		}
 
 		mgr.Responder.Respond(w, http.StatusCreated, inviteJSON)
@@ -105,12 +107,14 @@ func (mgr *InviteMgr) GetInvite() func(w http.ResponseWriter, req *http.Request)
 		json.Unmarshal([]byte(invite.QRCode), &qrcode)
 
 		inviteJSON := invitestore.InviteJSON{
-			Id:         invite.Id,
-			Organiser:  invite.Organiser,
-			Location:   invite.Location,
-			Date:       invite.Date,
-			QRCode:     qrcode,
-			Passphrase: invite.Passphrase,
+			Invite: invitestore.Invite{
+				Id:         invite.Id,
+				Organiser:  invite.Organiser,
+				Location:   invite.Location,
+				Date:       invite.Date,
+				Passphrase: invite.Passphrase,
+			},
+			QRCode: qrcode,
 		}
 
 		mgr.Responder.Respond(w, http.StatusOK, inviteJSON)

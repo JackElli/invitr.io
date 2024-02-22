@@ -9,8 +9,8 @@ import (
 )
 
 type InviteStorer interface {
-	Get(id string) (*Invite, error)
-	Insert(invite *Invite) (*Invite, error)
+	Get(id string) (*InviteDB, error)
+	Insert(invite *InviteDB) (*InviteDB, error)
 	// Remove(userId string) error
 
 	// Add these in later (not needed for now)
@@ -43,11 +43,11 @@ func NewInviteStore(logger *zap.Logger, db *sql.DB) *InviteStore {
 }
 
 // Get retrieves in this case a user from the db
-func (is *InviteStore) Get(id string) (*Invite, error) {
+func (is *InviteStore) Get(id string) (*InviteDB, error) {
 	query := fmt.Sprintf("SELECT * FROM invites WHERE id='%s'", id)
 	row := is.db.QueryRow(query)
 
-	var invite Invite
+	var invite InviteDB
 	switch err := row.Scan(&invite.Id,
 		&invite.Organiser, &invite.Location,
 		&invite.Date, &invite.QRCode, &invite.Passphrase); err {
@@ -61,7 +61,7 @@ func (is *InviteStore) Get(id string) (*Invite, error) {
 }
 
 // Insert adds an invite to the db
-func (is *InviteStore) Insert(invite *Invite) (*Invite, error) {
+func (is *InviteStore) Insert(invite *InviteDB) (*InviteDB, error) {
 	id, _ := uuid.NewV7()
 
 	// TODO for the QR code, can we use a byte array instead of JSON string
