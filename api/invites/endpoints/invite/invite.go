@@ -48,6 +48,22 @@ func generateQRCode() (*invitestore.QRCode, error) {
 	return &qrCode, nil
 }
 
+// bytesToQR returns a QR code type based on the bytes
+// provided
+func bytesToQR(b []byte) invitestore.QRCode {
+	var qrcode invitestore.QRCode
+	json.Unmarshal(b, &qrcode)
+
+	return qrcode
+}
+
+// qrToBytes returns a byte array based on QR code type
+// given
+func qrToBytes(qr invitestore.QRCode) []byte {
+	qrcodeBytes, _ := json.Marshal(qr)
+	return qrcodeBytes
+}
+
 // NewInvite creates a new invite based on some user input
 func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
@@ -64,7 +80,7 @@ func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request)
 
 		// We could possibly send it as a byte array
 		// but we'll need to unmarshal it properly
-		qrcodeBytes, _ := json.Marshal(*qrcode)
+		qrcodeBytes := qrToBytes(*qrcode)
 		getinvite.QRCode = string(qrcodeBytes)
 		invite, err := mgr.InviteStore.Insert(&getinvite)
 		if err != nil {
@@ -72,6 +88,7 @@ func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request)
 			return
 		}
 
+		// return in the JSON format
 		inviteJSON := invitestore.InviteJSON{
 			Invite: invitestore.Invite{
 				Id:         invite.Id,
@@ -103,9 +120,9 @@ func (mgr *InviteMgr) GetInvite() func(w http.ResponseWriter, req *http.Request)
 			return
 		}
 
-		var qrcode invitestore.QRCode
-		json.Unmarshal([]byte(invite.QRCode), &qrcode)
-
+		// need to change bytes to QR from db and then
+		// return in the JSON format
+		qrcode := bytesToQR([]byte(invite.QRCode))
 		inviteJSON := invitestore.InviteJSON{
 			Invite: invitestore.Invite{
 				Id:         invite.Id,

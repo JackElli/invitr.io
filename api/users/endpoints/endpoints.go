@@ -12,7 +12,10 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-const database = "users"
+const (
+	DB   = "users"
+	CONN = "todo:todosecret@tcp(db-users)/" + DB
+)
 
 type Endpoints struct {
 	Logger *zap.Logger
@@ -27,7 +30,7 @@ func NewEndpointsMgr(logger *zap.Logger) *Endpoints {
 func (e *Endpoints) SetupEndpoints(env string, r *mux.Router) error {
 	responder := responder.NewResponder()
 
-	db, err := sql.Open("mysql", "todo:todosecret@tcp(db-users)/"+database)
+	db, err := sql.Open("mysql", CONN)
 	if err != nil {
 		return err
 	}
