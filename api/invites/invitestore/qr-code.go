@@ -1,4 +1,4 @@
-package invitesmgr
+package invitestore
 
 type QRCode struct {
 	Width  int   `json:"width"`

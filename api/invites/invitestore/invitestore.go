@@ -1,4 +1,4 @@
-package invitesmgr
+package invitestore
 
 import (
 	"database/sql"

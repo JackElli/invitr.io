@@ -8,7 +8,7 @@ import (
 
 	"testing"
 	"users/responder"
-	"users/usermgr"
+	"users/userstore"
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
@@ -20,16 +20,16 @@ func TestNewUser(t *testing.T) {
 
 	type testcase struct {
 		desc             string
-		expectedResponse usermgr.User
+		expectedResponse userstore.User
 		expectedStatus   int
 	}
 
 	responderMock := responder.NewResponder()
-	usermgrMock := usermgr.NewUserStoreMock()
+	userstoreMock := userstore.NewUserStoreMock()
 	loggerMock, _ := zap.NewProduction()
 	defer loggerMock.Sync()
 
-	newUser := usermgr.User{
+	newUser := userstore.User{
 		UserId:   "1234",
 		Username: "Jack",
 	}
@@ -37,7 +37,7 @@ func TestNewUser(t *testing.T) {
 	testcases := []testcase{
 		{
 			desc: "HAPPY added user correctly",
-			expectedResponse: usermgr.User{
+			expectedResponse: userstore.User{
 				UserId:   "1234",
 				Username: "Jack",
 			},
@@ -53,7 +53,7 @@ func TestNewUser(t *testing.T) {
 				rMock,
 				loggerMock,
 				responderMock,
-				usermgrMock,
+				userstoreMock,
 			)
 			newUserMgrMock.Register()
 
@@ -64,7 +64,7 @@ func TestNewUser(t *testing.T) {
 			r, _ := http.NewRequest("POST", ROOT_TEST, bytes.NewBuffer(newUserData))
 			newUserMgrMock.Router.ServeHTTP(w, r)
 
-			var response usermgr.User
+			var response userstore.User
 			json.NewDecoder(w.Body).Decode(&response)
 
 			assert.Equal(t, w.Result().StatusCode, testCase.expectedStatus)

@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"users/endpoints/user"
 	"users/responder"
-	"users/usermgr"
+	"users/userstore"
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
@@ -34,7 +34,7 @@ func (e *Endpoints) SetupEndpoints(env string, r *mux.Router) error {
 
 	// set up stores, this is where we interact with the
 	// db
-	userStore := usermgr.NewUserStore(e.Logger, db)
+	userStore := userstore.NewUserStore(e.Logger, db)
 
 	public := r.PathPrefix("/").Subrouter()
 	// add endpoints to the router

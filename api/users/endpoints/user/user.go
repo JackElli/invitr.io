@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"users/responder"
-	"users/usermgr"
+	"users/userstore"
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
@@ -21,10 +21,10 @@ type UserMgr struct {
 	Logger    *zap.Logger
 	Router    *mux.Router
 	Responder responder.Responder
-	UserStore usermgr.UserStorer
+	UserStore userstore.UserStorer
 }
 
-func NewUserMgr(router *mux.Router, logger *zap.Logger, responder responder.Responder, userstore usermgr.UserStorer) *UserMgr {
+func NewUserMgr(router *mux.Router, logger *zap.Logger, responder responder.Responder, userstore userstore.UserStorer) *UserMgr {
 	e := &UserMgr{
 		Logger:    logger,
 		Router:    router,
@@ -54,7 +54,7 @@ func (mgr *UserMgr) GetUser() func(w http.ResponseWriter, req *http.Request) {
 // NewUser adds a new user to the db
 func (mgr *UserMgr) NewUser() func(w http.ResponseWriter, req *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
-		var getuser usermgr.User
+		var getuser userstore.User
 		json.NewDecoder(req.Body).Decode(&getuser)
 
 		user, err := mgr.UserStore.Insert(&getuser)

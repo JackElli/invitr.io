@@ -1,4 +1,4 @@
-package invitesmgr
+package invitestore
 
 type Invite struct {
 	Id         string `json:"id"`

@@ -3,7 +3,7 @@ package endpoints
 import (
 	"database/sql"
 	"invites/endpoints/invite"
-	"invites/invitesmgr"
+	"invites/invitestore"
 	"invites/responder"
 
 	"github.com/gorilla/mux"
@@ -34,7 +34,7 @@ func (e *Endpoints) SetupEndpoints(env string, r *mux.Router) error {
 
 	// set up stores, this is where we interact with the
 	// db
-	inviteStore := invitesmgr.NewInviteStore(e.Logger, db)
+	inviteStore := invitestore.NewInviteStore(e.Logger, db)
 
 	public := r.PathPrefix("/").Subrouter()
 	// add endpoints to the router

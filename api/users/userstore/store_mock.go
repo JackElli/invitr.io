@@ -1,4 +1,4 @@
-package usermgr
+package userstore
 
 type UserStoreMock struct{}
 

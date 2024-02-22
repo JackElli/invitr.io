@@ -2,7 +2,7 @@ package invite
 
 import (
 	"encoding/json"
-	"invites/invitesmgr"
+	"invites/invitestore"
 	"invites/responder"
 	"net/http"
 
@@ -20,10 +20,10 @@ type InviteMgr struct {
 	Logger      *zap.Logger
 	Router      *mux.Router
 	Responder   responder.Responder
-	InviteStore invitesmgr.InviteStorer
+	InviteStore invitestore.InviteStorer
 }
 
-func NewInviteMgr(router *mux.Router, logger *zap.Logger, responder responder.Responder, invitestore invitesmgr.InviteStorer) *InviteMgr {
+func NewInviteMgr(router *mux.Router, logger *zap.Logger, responder responder.Responder, invitestore invitestore.InviteStorer) *InviteMgr {
 	e := &InviteMgr{
 		Logger:      logger,
 		Router:      router,
@@ -35,14 +35,14 @@ func NewInviteMgr(router *mux.Router, logger *zap.Logger, responder responder.Re
 }
 
 // generateQRCode fetches a QR code from the QR code microservice
-func generateQRCode() (*invitesmgr.QRCode, error) {
+func generateQRCode() (*invitestore.QRCode, error) {
 	resp, err := http.Get(QR_CODE_URL)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	var qrCode invitesmgr.QRCode
+	var qrCode invitestore.QRCode
 	json.NewDecoder(resp.Body).Decode(&qrCode)
 
 	return &qrCode, nil
@@ -51,7 +51,7 @@ func generateQRCode() (*invitesmgr.QRCode, error) {
 // NewInvite creates a new invite based on some user input
 func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
-		var getinvite invitesmgr.Invite
+		var getinvite invitestore.Invite
 		json.NewDecoder(req.Body).Decode(&getinvite)
 
 		// we need to generate a QR code, for this we need to
@@ -72,7 +72,7 @@ func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request)
 			return
 		}
 
-		inviteJSON := invitesmgr.InviteJSON{
+		inviteJSON := invitestore.InviteJSON{
 			Id:         invite.Id,
 			Organiser:  invite.Organiser,
 			Location:   invite.Location,
@@ -101,10 +101,10 @@ func (mgr *InviteMgr) GetInvite() func(w http.ResponseWriter, req *http.Request)
 			return
 		}
 
-		var qrcode invitesmgr.QRCode
+		var qrcode invitestore.QRCode
 		json.Unmarshal([]byte(invite.QRCode), &qrcode)
 
-		inviteJSON := invitesmgr.InviteJSON{
+		inviteJSON := invitestore.InviteJSON{
 			Id:         invite.Id,
 			Organiser:  invite.Organiser,
 			Location:   invite.Location,
