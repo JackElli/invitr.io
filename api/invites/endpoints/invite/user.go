@@ -2,6 +2,7 @@ package invite
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"invitio.com/users/userstore"
@@ -11,18 +12,20 @@ const (
 	USER_URL = "http://users:3200/user/"
 )
 
-func GetUser(userId string) (*userstore.User, error) {
+// GetUser fetches a user based on an ID from the user service
+func (mgr *InviteMgr) GetUser(userId string) (*userstore.User, error) {
 	resp, err := http.Get(USER_URL + userId)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	var user userstore.User
-	err = json.NewDecoder(resp.Body).Decode(&user)
-	if err != nil {
-		return nil, err
+	if resp.StatusCode == 404 {
+		return nil, errors.New("user not found, cannot create invite")
 	}
+
+	var user userstore.User
+	json.NewDecoder(resp.Body).Decode(&user)
 
 	return &user, nil
 }

@@ -45,7 +45,11 @@ func (mgr *UserMgr) GetUser() func(w http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		// could we return a 404 if user not found?
+		if user == nil {
+			mgr.Responder.Error(w, 404, errors.New("user not found"))
+			return
+		}
+
 		mgr.Responder.Respond(w, http.StatusOK, user)
 	}
 }

@@ -42,7 +42,7 @@ func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request)
 
 		// we need to check if the organiser is actually
 		// a registered user
-		_, err := GetUser(getinvite.Organiser)
+		_, err := mgr.GetUser(getinvite.Organiser)
 		if err != nil {
 			mgr.Responder.Error(w, 404, err)
 			return
