@@ -7,18 +7,19 @@ RUN apk update && apk add --no-cache git
 # set workpath to anything with root
 WORKDIR /app
 
-#copy the users microservice (has to be local dir so users/)
+#copy the qr-codes microservice (has to be local dir so qr-codes/)
 COPY . .
 
+WORKDIR /app/qr-codes
 # get dependecies
 # and build
 RUN go get -d -v
-RUN go build -o /users
+RUN go build -o /qr-codes
 
 FROM scratch
 
-COPY --from=builder /users /users
+COPY --from=builder /qr-codes /qr-codes
 
 EXPOSE 3200
 
-ENTRYPOINT [ "/users" ]
+ENTRYPOINT [ "/qr-codes" ]

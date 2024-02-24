@@ -5,14 +5,13 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
-
 	"testing"
-	"users/responder"
-	"users/userstore"
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
 	"gotest.tools/assert"
+	"invitio.com/users/responder"
+	"invitio.com/users/userstore"
 )
 
 func TestNewUser(t *testing.T) {

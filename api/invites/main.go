@@ -1,12 +1,12 @@
 package main
 
 import (
-	"invites/endpoints"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
+	"invitio.com/invites/endpoints"
 )
 
 // Need to make sure that database is set up correctly

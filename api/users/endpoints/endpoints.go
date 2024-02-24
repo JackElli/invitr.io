@@ -2,12 +2,12 @@ package endpoints
 
 import (
 	"database/sql"
-	"users/endpoints/user"
-	"users/responder"
-	"users/userstore"
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
+	"invitio.com/users/endpoints/user"
+	"invitio.com/users/responder"
+	"invitio.com/users/userstore"
 
 	_ "github.com/go-sql-driver/mysql"
 )

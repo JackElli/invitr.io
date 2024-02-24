@@ -2,18 +2,18 @@ package invite
 
 import (
 	"encoding/json"
-	"invites/invitestore"
-	"invites/responder"
+
 	"net/http"
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
+	"invitio.com/invites/invitestore"
+	"invitio.com/invites/responder"
 )
 
 const (
-	QR_CODE_URL = "http://qr-codes:3201/qr-code"
-	ROOT        = "/invite"
-	INVITE      = ROOT + "/{inviteId}"
+	ROOT   = "/invite"
+	INVITE = ROOT + "/{inviteId}"
 )
 
 type InviteMgr struct {
@@ -34,45 +34,23 @@ func NewInviteMgr(router *mux.Router, logger *zap.Logger, responder responder.Re
 	return e
 }
 
-// generateQRCode fetches a QR code from the QR code microservice
-func generateQRCode() (*invitestore.QRCode, error) {
-	resp, err := http.Get(QR_CODE_URL)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	var qrCode invitestore.QRCode
-	json.NewDecoder(resp.Body).Decode(&qrCode)
-
-	return &qrCode, nil
-}
-
-// bytesToQR returns a QR code type based on the bytes
-// provided
-func bytesToQR(b []byte) invitestore.QRCode {
-	var qrcode invitestore.QRCode
-	json.Unmarshal(b, &qrcode)
-
-	return qrcode
-}
-
-// qrToBytes returns a byte array based on QR code type
-// given
-func qrToBytes(qr invitestore.QRCode) []byte {
-	qrcodeBytes, _ := json.Marshal(qr)
-	return qrcodeBytes
-}
-
 // NewInvite creates a new invite based on some user input
 func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
 		var getinvite invitestore.InviteDB
 		json.NewDecoder(req.Body).Decode(&getinvite)
 
+		// we need to check if the organiser is actually
+		// a registered user
+		_, err := GetUser(getinvite.Organiser)
+		if err != nil {
+			mgr.Responder.Error(w, 404, err)
+			return
+		}
+
 		// we need to generate a QR code, for this we need to
 		// call the QR code microservice
-		qrcode, err := generateQRCode()
+		qrcode, err := GenerateQRCode()
 		if err != nil {
 			mgr.Responder.Error(w, 500, err)
 			return

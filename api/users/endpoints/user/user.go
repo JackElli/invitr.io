@@ -5,11 +5,10 @@ import (
 	"errors"
 	"net/http"
 
-	"users/responder"
-	"users/userstore"
-
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
+	"invitio.com/users/responder"
+	"invitio.com/users/userstore"
 )
 
 const (

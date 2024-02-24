@@ -1,5 +1,7 @@
 package invitestore
 
+import qrcodes "invitio.com/qr-codes/endpoints/qr-codes"
+
 type Invite struct {
 	Id         string `json:"id"`
 	Organiser  string `json:"organiser"`
@@ -15,5 +17,5 @@ type InviteDB struct {
 
 type InviteJSON struct {
 	Invite
-	QRCode QRCode `json:"qr_code,omitempty"`
+	QRCode qrcodes.QRCode `json:"qr_code,omitempty"`
 }

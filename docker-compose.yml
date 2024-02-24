@@ -5,8 +5,8 @@ services:
     container_name: users
     restart: always
     build:
-      context: ./api/users
-      dockerfile: Dockerfile
+      context: ./api
+      dockerfile: ./deployment/users/Dockerfile
     depends_on:
       - db-users
     ports:
@@ -26,18 +26,18 @@ services:
     image: qr-codes
     container_name: qr-codes
     build:
-      context: ./api/qr-codes
-      dockerfile: Dockerfile
+      context: ./api
+      dockerfile: ./deployment/qr-codes/Dockerfile
     ports:
       - "3201:3201"
-  
+
   invites:
     image: invites
     container_name: invites
     restart: always
     build:
-      context: ./api/invites
-      dockerfile: Dockerfile
+      context: ./api
+      dockerfile: ./deployment/invites/Dockerfile
     depends_on:
       - db-invites
     ports:

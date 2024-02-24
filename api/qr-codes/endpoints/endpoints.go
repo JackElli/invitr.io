@@ -1,11 +1,10 @@
 package endpoints
 
 import (
-	qrcodes "qr-codes/endpoints/qr-codes"
-	"qr-codes/responder"
-
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
+	qrcodes "invitio.com/qr-codes/endpoints/qr-codes"
+	"invitio.com/qr-codes/responder"
 )
 
 type Endpoints struct {

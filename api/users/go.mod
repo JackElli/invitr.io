@@ -1,4 +1,4 @@
-module users
+module invitio.com/users
 
 go 1.21.0
 

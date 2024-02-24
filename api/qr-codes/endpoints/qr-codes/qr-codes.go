@@ -2,10 +2,10 @@ package qrcodes
 
 import (
 	"net/http"
-	"qr-codes/responder"
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
+	"invitio.com/qr-codes/responder"
 )
 
 const (

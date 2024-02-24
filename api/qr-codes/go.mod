@@ -1,4 +1,4 @@
-module qr-codes
+module invitio.com/qr-codes
 
 go 1.21.0
 

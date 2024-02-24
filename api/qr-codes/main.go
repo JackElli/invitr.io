@@ -3,10 +3,10 @@ package main
 import (
 	"log"
 	"net/http"
-	"qr-codes/endpoints"
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
+	"invitio.com/qr-codes/endpoints"
 )
 
 // This microservice doesn't need to persist anything
