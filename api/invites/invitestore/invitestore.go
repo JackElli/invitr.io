@@ -58,7 +58,7 @@ func (is *InviteStore) Get(id string) (*InviteDB, error) {
 	// we then need to aggregate the invitees into a json list. Once we have the
 	// query response, the invitees will be in bytes so we need to json unmarshal
 	// to turn it into a string list.
-	query := fmt.Sprintf("SELECT i.id, i.organiser, i.location, i.date, i.qr_code, i.passphrase, JSON_ARRAYAGG(ii.invitee) as invitees FROM invites i JOIN invites_invitees ii ON ii.invite_id=i.id WHERE i.id='%s'", id)
+	query := fmt.Sprintf("SELECT i.id, i.organiser, i.location, i.date, i.qr_code, i.passphrase, IF(ii.invitee IS NOT NULL, JSON_ARRAYAGG(ii.invitee), NULL) as invitees FROM invites i LEFT JOIN invites_invitees ii ON ii.invite_id=i.id WHERE i.id='%s'", id)
 	row := is.db.QueryRow(query)
 
 	var invite InviteDB
