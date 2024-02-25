@@ -13,7 +13,7 @@ const (
 )
 
 // GetUser fetches a user based on an ID from the user service
-func (mgr *InviteMgr) GetUser(userId string) (*userstore.User, error) {
+func GetUser(userId string) (*userstore.User, error) {
 	resp, err := http.Get(USER_URL + userId)
 	if err != nil {
 		return nil, err

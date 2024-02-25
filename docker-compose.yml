@@ -11,6 +11,7 @@ services:
       - db-users
     ports:
       - "3200:3200"
+
   db-users:
     image: mariadb:11
     restart: unless-stopped
@@ -42,6 +43,7 @@ services:
       - db-invites
     ports:
       - "3202:3202"
+
   db-invites:
     image: mariadb:11
     restart: unless-stopped

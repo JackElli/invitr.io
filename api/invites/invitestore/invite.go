@@ -3,11 +3,12 @@ package invitestore
 import qrcodes "invitio.com/qr-codes/endpoints/qr-codes"
 
 type Invite struct {
-	Id         string `json:"id"`
-	Organiser  string `json:"organiser"`
-	Location   string `json:"location"`
-	Date       string `json:"date"`
-	Passphrase string `json:"passphrase"`
+	Id         string   `json:"id"`
+	Organiser  string   `json:"organiser"`
+	Location   string   `json:"location"`
+	Date       string   `json:"date"`
+	Passphrase string   `json:"passphrase"`
+	Invitees   []string `json:"invitees"`
 }
 
 type InviteDB struct {

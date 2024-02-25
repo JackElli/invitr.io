@@ -2,6 +2,7 @@ package invite
 
 import (
 	"encoding/json"
+	"errors"
 
 	"net/http"
 
@@ -17,14 +18,16 @@ const (
 )
 
 type InviteMgr struct {
+	Env         string
 	Logger      *zap.Logger
 	Router      *mux.Router
 	Responder   responder.Responder
 	InviteStore invitestore.InviteStorer
 }
 
-func NewInviteMgr(router *mux.Router, logger *zap.Logger, responder responder.Responder, invitestore invitestore.InviteStorer) *InviteMgr {
+func NewInviteMgr(router *mux.Router, environment string, logger *zap.Logger, responder responder.Responder, invitestore invitestore.InviteStorer) *InviteMgr {
 	e := &InviteMgr{
+		Env:         environment,
 		Logger:      logger,
 		Router:      router,
 		Responder:   responder,
@@ -42,9 +45,17 @@ func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request)
 
 		// we need to check if the organiser is actually
 		// a registered user
-		_, err := mgr.GetUser(getinvite.Organiser)
-		if err != nil {
-			mgr.Responder.Error(w, 404, err)
+		if mgr.Env != "dev" {
+			_, err := GetUser(getinvite.Organiser)
+			if err != nil {
+				mgr.Responder.Error(w, 404, err)
+				return
+			}
+		}
+
+		// check if the user has invited people
+		if len(getinvite.Invitees) == 0 {
+			mgr.Responder.Error(w, 401, errors.New("no-one was invited, you need to invite someone"))
 			return
 		}
 
@@ -56,7 +67,7 @@ func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request)
 			return
 		}
 
-		// We could possibly send it as a byte array
+		// we could possibly send it as a byte array
 		// but we'll need to unmarshal it properly
 		qrcodeBytes := qrToBytes(*qrcode)
 		getinvite.QRCode = string(qrcodeBytes)
@@ -74,6 +85,7 @@ func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request)
 				Location:   invite.Location,
 				Date:       invite.Date,
 				Passphrase: invite.Passphrase,
+				Invitees:   invite.Invitees,
 			},
 			QRCode: *qrcode,
 		}
@@ -108,6 +120,7 @@ func (mgr *InviteMgr) GetInvite() func(w http.ResponseWriter, req *http.Request)
 				Location:   invite.Location,
 				Date:       invite.Date,
 				Passphrase: invite.Passphrase,
+				Invitees:   invite.Invitees,
 			},
 			QRCode: qrcode,
 		}

@@ -41,7 +41,7 @@ func (e *Endpoints) SetupEndpoints(env string, r *mux.Router) error {
 
 	public := r.PathPrefix("/").Subrouter()
 	// add endpoints to the router
-	_ = invite.NewInviteMgr(public, e.Logger, responder, inviteStore)
+	_ = invite.NewInviteMgr(public, env, e.Logger, responder, inviteStore)
 
 	return nil
 }
