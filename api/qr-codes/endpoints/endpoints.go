@@ -3,8 +3,8 @@ package endpoints
 import (
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
-	qrcodes "invitio.com/qr-codes/endpoints/qr-codes"
-	"invitio.com/qr-codes/responder"
+	qrcodes "invitr.io.com/qr-codes/endpoints/qr-codes"
+	"invitr.io.com/responder"
 )
 
 type Endpoints struct {

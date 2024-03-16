@@ -1,4 +1,4 @@
-module invitio.com/users
+module invitr.io.com/users
 
 go 1.21.0
 
@@ -8,6 +8,7 @@ require (
 	github.com/gorilla/mux v1.8.1
 	go.uber.org/zap v1.26.0
 	gotest.tools v2.2.0+incompatible
+	invitr.io.com/responder v0.0.0
 )
 
 require (
@@ -16,3 +17,5 @@ require (
 	github.com/stretchr/testify v1.8.4 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 )
+
+replace invitr.io.com/responder v0.0.0 => ../responder

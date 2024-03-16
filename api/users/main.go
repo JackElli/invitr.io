@@ -6,7 +6,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
-	"invitio.com/users/endpoints"
+	"invitr.io.com/users/endpoints"
 )
 
 // This microservice holds all of the info about the users

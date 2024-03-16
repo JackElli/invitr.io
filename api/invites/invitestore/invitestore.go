@@ -36,7 +36,7 @@ func NewInviteStore(logger *zap.Logger, db *sql.DB) *InviteStore {
 	}
 
 	// will also need to create the pivot tables here too :)
-	_, err = db.Query("CREATE TABLE IF NOT EXISTS invites_invitees (id varchar(50) NOT NULL, invite_id varchar(50) NOT NULL, invitee varchar(50) NOT NULL);")
+	_, err = db.Query("CREATE TABLE IF NOT EXISTS invites_invitees (id varchar(50) NOT NULL, invite_id varchar(50) NOT NULL, invitee varchar(50) NOT NULL, is_going boolean, message varchar(100));")
 
 	if err != nil {
 		logger.Error(err.Error())

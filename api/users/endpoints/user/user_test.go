@@ -10,8 +10,8 @@ import (
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
 	"gotest.tools/assert"
-	"invitio.com/users/responder"
-	"invitio.com/users/userstore"
+	"invitr.io.com/responder"
+	"invitr.io.com/users/userstore"
 )
 
 func TestNewUser(t *testing.T) {

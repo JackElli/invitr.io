@@ -8,8 +8,8 @@ import (
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
-	"invitio.com/invites/invitestore"
-	"invitio.com/invites/responder"
+	"invitr.io.com/invites/invitestore"
+	"invitr.io.com/responder"
 )
 
 const (

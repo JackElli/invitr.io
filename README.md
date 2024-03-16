@@ -1,4 +1,4 @@
-# Invit.io
+# invitr.io
 
 ## A project to make it easier for you to invite people to your events
 
@@ -7,7 +7,7 @@ The idea is to create a nice UI which organisers can log in to and create events
 ## Getting started
 
 1)  ```
-    git clone git@github.com:JackElli/invitio.git
+    git clone git@github.com:JackElli/invitr.io.git
     ```
 2) `docker-compose up --build -d`
 3) Use postman or cURL to send a POST request to `http://localhost:3202/invite` with body

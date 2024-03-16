@@ -5,7 +5,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
-	"invitio.com/qr-codes/responder"
+	"invitr.io.com/responder"
 )
 
 const (

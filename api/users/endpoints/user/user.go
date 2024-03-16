@@ -7,8 +7,8 @@ import (
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
-	"invitio.com/users/responder"
-	"invitio.com/users/userstore"
+	"invitr.io.com/responder"
+	"invitr.io.com/users/userstore"
 )
 
 const (

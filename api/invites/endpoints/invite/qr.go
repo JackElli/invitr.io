@@ -4,14 +4,14 @@ import (
 	"encoding/json"
 	"net/http"
 
-	qrcodes "invitio.com/qr-codes/endpoints/qr-codes"
+	qrcodes "invitr.io.com/qr-codes/endpoints/qr-codes"
 )
 
 const (
 	QR_CODE_URL = "http://qr-codes:3201/qr-code"
 )
 
-// generateQRCode fetches a QR code from the QR code microservice
+// GenerateQRCode fetches a QR code from the QR code microservice
 func GenerateQRCode() (*qrcodes.QRCode, error) {
 	resp, err := http.Get(QR_CODE_URL)
 	if err != nil {

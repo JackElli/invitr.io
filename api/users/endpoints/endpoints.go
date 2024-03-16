@@ -3,13 +3,12 @@ package endpoints
 import (
 	"database/sql"
 
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
-	"invitio.com/users/endpoints/user"
-	"invitio.com/users/responder"
-	"invitio.com/users/userstore"
-
-	_ "github.com/go-sql-driver/mysql"
+	"invitr.io.com/responder"
+	"invitr.io.com/users/endpoints/user"
+	"invitr.io.com/users/userstore"
 )
 
 const (
