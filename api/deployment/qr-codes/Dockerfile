@@ -10,7 +10,7 @@ WORKDIR /app
 #copy the qr-codes microservice (has to be local dir so qr-codes/)
 COPY . .
 
-WORKDIR /app/qr-codes
+WORKDIR /app/services/qr-codes
 # get dependecies
 # and build
 RUN go get -d -v

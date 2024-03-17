@@ -6,7 +6,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
-	"invitr.io.com/qr-codes/endpoints"
+	"invitr.io.com/services/qr-codes/endpoints"
 )
 
 // This microservice doesn't need to persist anything

@@ -1,8 +1,8 @@
 go 1.21.0
 
 use (
-	./api/invites
-	./api/qr-codes
+	./api/services/invites
+	./api/services/qr-codes
 	./api/responder
-	./api/users
+	./api/services/users
 )

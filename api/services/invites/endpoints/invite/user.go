@@ -5,7 +5,7 @@ import (
 	"errors"
 	"net/http"
 
-	"invitr.io.com/users/userstore"
+	"invitr.io.com/services/users/userstore"
 )
 
 const (

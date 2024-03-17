@@ -1,4 +1,4 @@
-module invitr.io.com/qr-codes
+module invitr.io.com/services/qr-codes
 
 go 1.21.0
 
@@ -10,4 +10,4 @@ require (
 
 require go.uber.org/multierr v1.10.0 // indirect
 
-replace invitr.io.com/responder v0.0.0 => ../responder
+replace invitr.io.com/responder v0.0.0 => ../../responder

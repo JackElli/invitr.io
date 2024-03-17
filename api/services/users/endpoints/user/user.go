@@ -8,7 +8,7 @@ import (
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
 	"invitr.io.com/responder"
-	"invitr.io.com/users/userstore"
+	"invitr.io.com/services/users/userstore"
 )
 
 const (

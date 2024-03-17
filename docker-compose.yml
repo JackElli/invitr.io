@@ -7,6 +7,8 @@ services:
     build:
       context: ./api
       dockerfile: ./deployment/users/Dockerfile
+    env_file:
+      - ./.env
     depends_on:
       - db-users
     ports:
@@ -39,6 +41,8 @@ services:
     build:
       context: ./api
       dockerfile: ./deployment/invites/Dockerfile
+    env_file:
+      - ./.env
     depends_on:
       - db-invites
     ports:

@@ -6,7 +6,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
-	"invitr.io.com/invites/endpoints"
+	"invitr.io.com/services/invites/endpoints"
 )
 
 // Need to make sure that database is set up correctly

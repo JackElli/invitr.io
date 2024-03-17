@@ -11,7 +11,7 @@ import (
 	"go.uber.org/zap"
 	"gotest.tools/assert"
 	"invitr.io.com/responder"
-	"invitr.io.com/users/userstore"
+	"invitr.io.com/services/users/userstore"
 )
 
 func TestNewUser(t *testing.T) {

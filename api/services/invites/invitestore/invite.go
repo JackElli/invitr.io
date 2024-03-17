@@ -1,6 +1,6 @@
 package invitestore
 
-import qrcodes "invitr.io.com/qr-codes/endpoints/qr-codes"
+import qrcodes "invitr.io.com/services/qr-codes/endpoints/qr-codes"
 
 type Invite struct {
 	Id         string   `json:"id"`

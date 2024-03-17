@@ -10,7 +10,7 @@ WORKDIR /app
 #copy the users microservice (has to be local dir so users/)
 COPY . .
 
-WORKDIR /app/users
+WORKDIR /app/services/users
 # get dependecies
 # and build
 RUN go get -d -v

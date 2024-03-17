@@ -3,13 +3,12 @@ package invite
 import (
 	"encoding/json"
 	"errors"
-
 	"net/http"
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
-	"invitr.io.com/invites/invitestore"
 	"invitr.io.com/responder"
+	"invitr.io.com/services/invites/invitestore"
 )
 
 const (

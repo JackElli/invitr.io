@@ -1,4 +1,4 @@
-module invitr.io.com/users
+module invitr.io.com/services/users
 
 go 1.21.0
 
@@ -18,4 +18,4 @@ require (
 	go.uber.org/multierr v1.11.0 // indirect
 )
 
-replace invitr.io.com/responder v0.0.0 => ../responder
+replace invitr.io.com/responder v0.0.0 => ../../responder

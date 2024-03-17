@@ -10,7 +10,7 @@ WORKDIR /app
 #copy the invites microservice (has to be local dir so invites/)
 COPY . .
 
-WORKDIR /app/invites
+WORKDIR /app/services/invites
 # get dependecies
 # and build
 RUN go get -d -v

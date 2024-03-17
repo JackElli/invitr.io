@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	qrcodes "invitr.io.com/qr-codes/endpoints/qr-codes"
+	qrcodes "invitr.io.com/services/qr-codes/endpoints/qr-codes"
 )
 
 const (
