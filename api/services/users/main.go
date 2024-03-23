@@ -6,6 +6,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
+	"invitr.io.com/cors"
 	"invitr.io.com/services/users/endpoints"
 )
 
@@ -32,7 +33,7 @@ func main() {
 	}
 
 	logger.Info("Started users api...")
-	err = http.ListenAndServe(":3200", http.Handler(r))
+	err = http.ListenAndServe(":3200", cors.CORS(r, ENVIRONMENT))
 	if err != nil {
 		log.Fatal("Cannot start server")
 	}

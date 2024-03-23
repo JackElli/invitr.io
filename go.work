@@ -4,5 +4,6 @@ use (
 	./api/services/invites
 	./api/services/qr-codes
 	./api/pkg/responder
+	./api/pkg/cors
 	./api/services/users
 )
