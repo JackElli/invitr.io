@@ -6,6 +6,7 @@ import (
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
+	"invitr.io.com/cors"
 	"invitr.io.com/services/qr-codes/endpoints"
 )
 
@@ -28,7 +29,7 @@ func main() {
 	}
 
 	logger.Info("Started qr-codes api...")
-	err = http.ListenAndServe(":3201", http.Handler(r))
+	err = http.ListenAndServe(":3201", cors.CORS(r, ENVIRONMENT))
 	if err != nil {
 		log.Fatal("Cannot start server")
 	}
