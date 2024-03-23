@@ -1,3 +1,6 @@
+import Button from "@/app/lib/components/Button";
+
+
 export default function Dashboard() {
     return (
         <>
@@ -5,8 +8,8 @@ export default function Dashboard() {
                 <h1 className='text-3xl font-bold'>Welcome to invitr.io</h1>
                 <p className="text-sm">Start inviting people to your events.</p>
 
-                <a href='/invite'>
-                    <button className="px-4 py-2 rounded-lg bg-stone-200 mt-4 border border-gray-300 shadow-sm hover:shadow-md">Start inviting</button>
+                <a href='/invite' className="inline-block">
+                    <Button className="mt-4">Start inviting</Button>
                 </a>
             </div>
 
