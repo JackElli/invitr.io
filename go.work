@@ -3,6 +3,6 @@ go 1.21.0
 use (
 	./api/services/invites
 	./api/services/qr-codes
-	./api/responder
+	./api/pkg/responder
 	./api/services/users
 )

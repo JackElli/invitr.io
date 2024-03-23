@@ -20,4 +20,4 @@ replace invitr.io.com/services/users v0.0.0 => ../users
 
 replace invitr.io.com/services/qr-codes v0.0.0 => ../qr-codes
 
-replace invitr.io.com/responder v0.0.0 => ../../responder
+replace invitr.io.com/responder v0.0.0 => ../../pkg/responder

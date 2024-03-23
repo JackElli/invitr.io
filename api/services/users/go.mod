@@ -18,4 +18,4 @@ require (
 	go.uber.org/multierr v1.11.0 // indirect
 )
 
-replace invitr.io.com/responder v0.0.0 => ../../responder
+replace invitr.io.com/responder v0.0.0 => ../../pkg/responder
