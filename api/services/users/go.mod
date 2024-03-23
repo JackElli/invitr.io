@@ -8,14 +8,19 @@ require (
 	github.com/gorilla/mux v1.8.1
 	go.uber.org/zap v1.26.0
 	gotest.tools v2.2.0+incompatible
+	invitr.io.com/cors v0.0.0
 	invitr.io.com/responder v0.0.0
 )
 
 require (
+	github.com/felixge/httpsnoop v1.0.3 // indirect
 	github.com/google/go-cmp v0.6.0 // indirect
+	github.com/gorilla/handlers v1.5.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/stretchr/testify v1.8.4 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 )
 
-replace invitr.io.com/responder v0.0.0 => ../../responder
+replace invitr.io.com/responder v0.0.0 => ../../pkg/responder
+
+replace invitr.io.com/cors v0.0.0 => ../../pkg/cors

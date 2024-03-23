@@ -2,6 +2,7 @@
 
 import Button from "@/app/lib/components/Button";
 import Textbox from "@/app/lib/components/Textbox";
+import TestService from "@/app/lib/services/TestService";
 import { createRef, useEffect } from "react"
 
 export default function Invite() {
@@ -12,6 +13,8 @@ export default function Invite() {
     }, [])
 
     const createEvent = () => {
+        const t = TestService.test();
+        console.log(t);
         alert("CLICKED");
     }
 
