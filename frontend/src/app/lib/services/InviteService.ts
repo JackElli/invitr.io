@@ -10,22 +10,28 @@ export type Invite = {
     invitees: string[];
 }
 
-const ip = "invites:3202";
+const PORT = "3202"
+const SSR_IP = "invites:" + PORT;
+const CLIENT_IP = "localhost:" + PORT
 
 class InviteService {
     async new(title: string, location: string, date: string, passphrase: string) {
-        NetworkService.post(`http://localhost:3202/invites/invite`, {
+        NetworkService.post(`http://${CLIENT_IP}/invites/invite`, {
             title: title,
             organiser: "123",
             location: location,
             date: date,
             passphrase: passphrase,
             invitees: ["jackellis"]
-        })
-    };
+        });
+    }
+
+    async getById(id: string): Promise<Invite> {
+        return NetworkService.get(`http://${SSR_IP}/invites/invite/${id}`);
+    }
 
     async getByUser(userId: string): Promise<Invite[]> {
-        return NetworkService.get(`http://${ip}/invites/user/${userId}`);
+        return NetworkService.get(`http://${SSR_IP}/invites/user/${userId}`);
     }
 }
 

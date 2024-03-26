@@ -28,7 +28,7 @@ type InviteStore struct {
 
 func NewInviteStore(logger *zap.Logger, db *sql.DB) *InviteStore {
 	// need to create the table if it doesn't exist
-	_, err := db.Query("CREATE TABLE IF NOT EXISTS invites (id varchar(50) NOT NULL, title varchar(50) NOT NULL, organiser varchar(50) NOT NULL, location varchar(50) NOT NULL, date varchar(50) NOT NULL, qr_code varchar(1024) NOT NULL, passphrase varchar(50) NOT NULL);")
+	_, err := db.Query("CREATE TABLE IF NOT EXISTS invites (id varchar(50) NOT NULL, title varchar(50) NOT NULL, organiser varchar(50) NOT NULL, location varchar(50) NOT NULL, date DATETIME NOT NULL, qr_code varchar(1024) NOT NULL, passphrase varchar(50) NOT NULL);")
 
 	if err != nil {
 		logger.Error(err.Error())
@@ -81,7 +81,7 @@ func (store *InviteStore) Get(id string) (*InviteDB, error) {
 
 // GetByUser retrieves all invites created by a user
 func (store *InviteStore) ListByUser(userId string) ([]InviteDB, error) {
-	query := fmt.Sprintf("SELECT i.id, i.title, i.organiser, i.location, i.date, i.qr_code, i.passphrase, IF(ii.invitee IS NOT NULL, JSON_ARRAYAGG(ii.invitee), NULL) as invitees FROM invites i LEFT JOIN invites_invitees ii ON ii.invite_id=i.id WHERE i.organiser='%s' GROUP BY i.id", userId)
+	query := fmt.Sprintf("SELECT i.id, i.title, i.organiser, i.location, i.date, i.qr_code, i.passphrase, IF(ii.invitee IS NOT NULL, JSON_ARRAYAGG(ii.invitee), NULL) as invitees FROM invites i LEFT JOIN invites_invitees ii ON ii.invite_id=i.id WHERE i.organiser='%s' GROUP BY i.id ORDER BY i.date DESC", userId)
 	rows, err := store.db.Query(query)
 	if err != nil {
 		return nil, err

@@ -133,8 +133,8 @@ func (mgr *InviteMgr) GetInvite() func(w http.ResponseWriter, req *http.Request)
 	}
 }
 
-// GetInvite retrieves an invite based on the id given
-func (mgr *InviteMgr) GetInvitesByUser() func(w http.ResponseWriter, req *http.Request) {
+// ListInvitesByUser retrieves an invite based on the user given
+func (mgr *InviteMgr) ListInvitesByUser() func(w http.ResponseWriter, req *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
 		userId := mux.Vars(req)["userId"]
 
@@ -172,5 +172,5 @@ func (mgr *InviteMgr) GetInvitesByUser() func(w http.ResponseWriter, req *http.R
 func (mgr *InviteMgr) Register() {
 	mgr.Router.HandleFunc(BASE, mgr.NewInvite()).Methods("POST")
 	mgr.Router.HandleFunc(INVITE, mgr.GetInvite()).Methods("GET")
-	mgr.Router.HandleFunc(USER, mgr.GetInvitesByUser()).Methods("GET")
+	mgr.Router.HandleFunc(USER, mgr.ListInvitesByUser()).Methods("GET")
 }
