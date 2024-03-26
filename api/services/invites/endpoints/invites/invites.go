@@ -1,4 +1,4 @@
-package invite
+package invites
 
 import (
 	"encoding/json"
@@ -8,12 +8,15 @@ import (
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
 	"invitr.io.com/responder"
+	invites_pkg "invitr.io.com/services/invites/endpoints/pkg"
 	"invitr.io.com/services/invites/invitestore"
 )
 
 const (
-	ROOT   = "/invite"
-	INVITE = ROOT + "/{inviteId}"
+	ROOT   = "/invites"
+	BASE   = ROOT + "/invite"
+	USER   = ROOT + "/user/{userId}"
+	INVITE = BASE + "/{inviteId}"
 )
 
 type InviteMgr struct {
@@ -45,7 +48,7 @@ func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request)
 		// we need to check if the organiser is actually
 		// a registered user
 		if mgr.Env != "dev" {
-			_, err := GetUser(getinvite.Organiser)
+			_, err := invites_pkg.GetUser(getinvite.Organiser)
 			if err != nil {
 				mgr.Responder.Error(w, 404, err)
 				return
@@ -60,7 +63,7 @@ func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request)
 
 		// we need to generate a QR code, for this we need to
 		// call the QR code microservice
-		qrcode, err := GenerateQRCode()
+		qrcode, err := invites_pkg.GenerateQRCode()
 		if err != nil {
 			mgr.Responder.Error(w, 500, err)
 			return
@@ -68,7 +71,7 @@ func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request)
 
 		// we could possibly send it as a byte array
 		// but we'll need to unmarshal it properly
-		qrcodeBytes := qrToBytes(*qrcode)
+		qrcodeBytes := invites_pkg.QrToBytes(*qrcode)
 		getinvite.QRCode = string(qrcodeBytes)
 		invite, err := mgr.InviteStore.Insert(&getinvite)
 		if err != nil {
@@ -80,6 +83,7 @@ func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request)
 		inviteJSON := invitestore.InviteJSON{
 			Invite: invitestore.Invite{
 				Id:         invite.Id,
+				Title:      invite.Title,
 				Organiser:  invite.Organiser,
 				Location:   invite.Location,
 				Date:       invite.Date,
@@ -111,10 +115,11 @@ func (mgr *InviteMgr) GetInvite() func(w http.ResponseWriter, req *http.Request)
 
 		// need to change bytes to QR from db and then
 		// return in the JSON format
-		qrcode := bytesToQR([]byte(invite.QRCode))
+		qrcode := invites_pkg.BytesToQR([]byte(invite.QRCode))
 		inviteJSON := invitestore.InviteJSON{
 			Invite: invitestore.Invite{
 				Id:         invite.Id,
+				Title:      invite.Title,
 				Organiser:  invite.Organiser,
 				Location:   invite.Location,
 				Date:       invite.Date,
@@ -128,7 +133,44 @@ func (mgr *InviteMgr) GetInvite() func(w http.ResponseWriter, req *http.Request)
 	}
 }
 
+// GetInvite retrieves an invite based on the id given
+func (mgr *InviteMgr) GetInvitesByUser() func(w http.ResponseWriter, req *http.Request) {
+	return func(w http.ResponseWriter, req *http.Request) {
+		userId := mux.Vars(req)["userId"]
+
+		invites, err := mgr.InviteStore.ListByUser(userId)
+		if err != nil {
+			mgr.Responder.Error(w, 400, err)
+			return
+		}
+
+		invitesJSON := make([]invitestore.InviteJSON, 0)
+
+		// need to change bytes to QR from db and then
+		// return in the JSON format
+		for _, invite := range invites {
+			qrcode := invites_pkg.BytesToQR([]byte(invite.QRCode))
+			invitesJSON = append(invitesJSON, invitestore.InviteJSON{
+				Invite: invitestore.Invite{
+					Id:         invite.Id,
+					Title:      invite.Title,
+					Organiser:  invite.Organiser,
+					Location:   invite.Location,
+					Date:       invite.Date,
+					Passphrase: invite.Passphrase,
+					Invitees:   invite.Invitees,
+				},
+				QRCode: qrcode,
+			})
+
+		}
+
+		mgr.Responder.Respond(w, http.StatusOK, invitesJSON)
+	}
+}
+
 func (mgr *InviteMgr) Register() {
-	mgr.Router.HandleFunc(ROOT, mgr.NewInvite()).Methods("POST")
+	mgr.Router.HandleFunc(BASE, mgr.NewInvite()).Methods("POST")
 	mgr.Router.HandleFunc(INVITE, mgr.GetInvite()).Methods("GET")
+	mgr.Router.HandleFunc(USER, mgr.GetInvitesByUser()).Methods("GET")
 }
