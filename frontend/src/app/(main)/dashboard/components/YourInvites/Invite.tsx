@@ -1,5 +1,5 @@
 import { getDate } from "@/app/lib/components/Date";
-import { Invite } from "../../../lib/services/InviteService";
+import { Invite } from "../../../../lib/services/InviteService";
 
 type Props = {
     _key: string;
