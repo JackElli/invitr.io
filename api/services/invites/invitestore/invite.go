@@ -9,7 +9,12 @@ type Invite struct {
 	Location   string   `json:"location"`
 	Date       string   `json:"date"`
 	Passphrase string   `json:"passphrase"`
-	Invitees   []string `json:"invitees"`
+	Invitees   []Person `json:"invitees"`
+}
+
+type Person struct {
+	Name    string `json:"name"`
+	IsGoing int8   `json:"is_going,omitempty"`
 }
 
 type InviteDB struct {
