@@ -1,6 +1,6 @@
 import YourInvites from "../components/YourInvites/YourEvents";
 
-export default function Events() {
+export default function EventsPage() {
     return (
         <YourInvites />
     )

@@ -4,6 +4,8 @@
 
 The idea is to create a nice UI which organisers can log in to and create events, from which they can invite people to. This could be weddings, business meetings, parties, etc... The recipient **SHOULD NOT** need to have an account to accept an invitation; the invitation should come in the form of a: personalised physical invitation or email with link (needs to be safe). Each invite should have a custom passphrase in order for the recipient to enter (for added security). The page that the recipient is taken to should have a big accept or reject button with the option to type a message. It should show where, when, who and when the event is finished, the same page is used for the summary page.
 
+![dashboard](./images/dashboard.png)
+
 ## Getting started
 
 1)  ```

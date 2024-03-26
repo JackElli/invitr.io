@@ -14,7 +14,7 @@ type Inputs = {
     passphrase: string;
 }
 
-export default function InvitePage() {
+export default function NewInvitePage() {
 
     const titleInput = createRef<HTMLInputElement>();
     const router = useRouter();

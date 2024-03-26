@@ -1,4 +1,4 @@
-import { getDate } from "@/app/lib/components/Date";
+import { getDate } from "@/app/lib/Date";
 import { Invite } from "../../../../lib/services/InviteService";
 
 type Props = {

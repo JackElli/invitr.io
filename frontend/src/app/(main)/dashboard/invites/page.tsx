@@ -1,7 +1,5 @@
-const Invites = () => {
+export default function InvitesPage() {
     return (
-        <p>Invites</p>
+        <p>No pending invites</p>
     )
 }
-
-export default Invites;
