@@ -1,12 +1,12 @@
 import Button from "@/app/lib/components/Button";
 import ErrorCard from "@/app/lib/components/ErrorCard";
 import InviteService from "@/app/lib/services/InviteService";
-import { getDate, getDateRelative, isOver } from "@/app/lib/components/Date";
+import { getDate, getDateRelative, isOver } from "@/app/lib/Date";
 
-export default async function Invite({ params }: { params: { id: string } }) {
+export default async function InvitePage({ params }: { params: { id: string } }) {
     try {
         const invite = await InviteService.getById(params.id);
-        const hasPassed = isOver(invite.date);
+        const hasEventFinished = isOver(invite.date);
         return (
             <>
                 <div className="border-b border-b-zinc-200 pb-4">
@@ -18,7 +18,7 @@ export default async function Invite({ params }: { params: { id: string } }) {
                     <h1 className="font-semibold text-2xl mt-2">{invite.location}</h1>
                     <div className="flex gap-2 items-center mt-2">
                         <h1 className="font-semibold text-xl">{getDate(invite.date)}</h1>
-                        <p className={`px-4 py-1  rounded-2xl border shadow-sm bg-gray-100 ${!hasPassed ? ' animate-pulse  border-green-400' : 'border-red-200'}`}>{getDateRelative(invite.date)}</p>
+                        <p className={`px-4   rounded-2xl border shadow-sm bg-gray-100 ${!hasEventFinished ? '  border-green-400 bg-green-200 font-bold' : 'border-red-200'}`}>{getDateRelative(invite.date)}</p>
                     </div>
 
                 </div>
