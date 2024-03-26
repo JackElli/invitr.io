@@ -9,7 +9,7 @@ import (
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
 	"invitr.io.com/responder"
-	"invitr.io.com/services/invites/endpoints/invite"
+	"invitr.io.com/services/invites/endpoints/invites"
 	"invitr.io.com/services/invites/invitestore"
 )
 
@@ -52,7 +52,7 @@ func (e *Endpoints) SetupEndpoints(env string, r *mux.Router) error {
 	inviteStore := invitestore.NewInviteStore(e.Logger, db)
 
 	// add endpoints to the router
-	_ = invite.NewInviteMgr(public, env, e.Logger, responder, inviteStore)
+	_ = invites.NewInviteMgr(public, env, e.Logger, responder, inviteStore)
 
 	return nil
 }
