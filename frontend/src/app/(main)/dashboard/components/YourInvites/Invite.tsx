@@ -1,4 +1,4 @@
-import { getDate } from "@/app/lib/Date";
+import { getDate, getDateRelative } from "@/app/lib/Date";
 import { Invite } from "../../../../lib/services/InviteService";
 
 type Props = {
@@ -8,9 +8,13 @@ type Props = {
 
 const Invite_ = ({ _key, invite }: Props) => {
     return (
-        <div key={_key} className="bg-white p-4 rounded-md border border-gray-200 shadow-sm hover:border-gray-300 cursor-pointer">
-            <h1 className="font-bold text-md">{invite.title}</h1>
-            <p><span className="font-bold">{getDate(invite.date)}</span> at {invite.location}</p>
+        <div key={_key} className="flex justify-between items-center bg-white p-4 rounded-md border border-gray-200 shadow-sm hover:border-gray-300 cursor-pointer">
+            <div>
+                <h1 className="font-bold text-lg">{invite.title}</h1>
+                <p><span className="font-bold">{getDate(invite.date)}</span> at {invite.location}</p>
+            </div>
+
+            <p className="text-sm bg-gray-200 inline-block px-2 rounded-sm">{getDateRelative(invite.date)}</p>
         </div>
     )
 }

@@ -8,11 +8,11 @@ interface Props extends PropsWithChildren {
     onChange?: ChangeEventHandler<HTMLInputElement>;
 }
 
-const Textbox = ({ children, name, value, _ref, onChange }: Props) => {
+const Textbox = ({ children, name, value, _ref, className, onChange }: Props) => {
     return (
         <>
             <p className="text-sm text-gray-800">{children}</p>
-            <input name={name} ref={_ref} value={value} onChange={onChange} className="px-2 py-1 border border-gray-300 rounded-sm outline-none" />
+            <input name={name} ref={_ref} value={value} onChange={onChange} className={`px-2 py-1 border border-gray-300 rounded-sm outline-none ${className}`} />
         </>
     )
 }
