@@ -1,4 +1,4 @@
-package invite
+package invites_pkg
 
 import (
 	"encoding/json"
@@ -7,9 +7,7 @@ import (
 	qrcodes "invitr.io.com/services/qr-codes/endpoints/qr-codes"
 )
 
-const (
-	QR_CODE_URL = "http://qr-codes:3201/qr-code"
-)
+const QR_CODE_URL = "http://qr-codes:3201/qr-code"
 
 // GenerateQRCode fetches a QR code from the QR code microservice
 func GenerateQRCode() (*qrcodes.QRCode, error) {
@@ -27,7 +25,7 @@ func GenerateQRCode() (*qrcodes.QRCode, error) {
 
 // bytesToQR returns a QR code type based on the bytes
 // provided
-func bytesToQR(b []byte) qrcodes.QRCode {
+func BytesToQR(b []byte) qrcodes.QRCode {
 	var qrcode qrcodes.QRCode
 	json.Unmarshal(b, &qrcode)
 
@@ -36,7 +34,7 @@ func bytesToQR(b []byte) qrcodes.QRCode {
 
 // qrToBytes returns a byte array based on QR code type
 // given
-func qrToBytes(qr qrcodes.QRCode) []byte {
+func QrToBytes(qr qrcodes.QRCode) []byte {
 	qrcodeBytes, _ := json.Marshal(qr)
 	return qrcodeBytes
 }

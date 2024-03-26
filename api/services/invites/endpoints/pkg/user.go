@@ -1,4 +1,4 @@
-package invite
+package invites_pkg
 
 import (
 	"encoding/json"
@@ -8,9 +8,7 @@ import (
 	"invitr.io.com/services/users/userstore"
 )
 
-const (
-	USER_URL = "http://users:3200/user/"
-)
+const USER_URL = "http://users:3200/user/"
 
 // GetUser fetches a user based on an ID from the user service
 func GetUser(userId string) (*userstore.User, error) {
