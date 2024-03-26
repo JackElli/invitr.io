@@ -18,7 +18,7 @@ export default async function Invite({ params }: { params: { id: string } }) {
                     <h1 className="font-semibold text-2xl mt-2">{invite.location}</h1>
                     <div className="flex gap-2 items-center mt-2">
                         <h1 className="font-semibold text-xl">{getDate(invite.date)}</h1>
-                        <p className={`px-4 py-1  rounded-lg border shadow-sm bg-gray-100 ${!hasPassed ? ' animate-pulse  border-green-400' : 'border-red-200'}`}>{getDateRelative(invite.date)}</p>
+                        <p className={`px-4 py-1  rounded-2xl border shadow-sm bg-gray-100 ${!hasPassed ? ' animate-pulse  border-green-400' : 'border-red-200'}`}>{getDateRelative(invite.date)}</p>
                     </div>
 
                 </div>
