@@ -4,7 +4,7 @@ import YourInvites from "./YourInvites/YourEvents";
 
 const USER = "123";
 
-export default async function Dashboard() {
+export default function Dashboard() {
     return (
         <>
             <div className="border-b border-b-gray-200 pb-4">

@@ -1,15 +1,16 @@
+import { getDate } from "@/app/lib/components/Date";
 import { Invite } from "../../../lib/services/InviteService";
 
 type Props = {
-    key: string;
+    _key: string;
     invite: Invite;
 }
 
-const Invite_ = ({ key, invite }: Props) => {
+const Invite_ = ({ _key, invite }: Props) => {
     return (
-        <div className="bg-white p-4 rounded-md border border-gray-200 shadow-sm hover:border-gray-300 cursor-pointer">
+        <div key={_key} className="bg-white p-4 rounded-md border border-gray-200 shadow-sm hover:border-gray-300 cursor-pointer">
             <h1 className="font-bold text-md">{invite.title}</h1>
-            <p key={key}><span className="font-bold">{invite.date}</span> at {invite.location}</p>
+            <p><span className="font-bold">{getDate(invite.date)}</span> at {invite.location}</p>
         </div>
     )
 }

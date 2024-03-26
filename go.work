@@ -3,7 +3,8 @@ go 1.21.0
 use (
 	./api/services/invites
 	./api/services/qr-codes
+	./api/services/users
+
 	./api/pkg/responder
 	./api/pkg/cors
-	./api/services/users
 )
