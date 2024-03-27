@@ -12,18 +12,20 @@ The idea is to create a nice UI which organisers can log in to and create events
     git clone git@github.com:JackElli/invitr.io.git
     ```
 2) `docker-compose up --build -d`
-3) Use postman or cURL to send a POST request to `http://localhost:3202/invite` with body
+3) Use postman or cURL to send a POST request to `http://localhost:3202/invites/invite` with body
     ```
         {
+        "title":"This is a test",
         "organiser":"123", 
         "location":"Manchester", 
-        "date":"tomorrow",
-        "passphrase": "welcome"
+        "date":"2024-08-10",
+        "passphrase": "welcome",
+        "invitees": [{"name":"testuser"}]
         }
     ```
 4) To then see the invite send a GET request to 
     ```
-    http://localhost:3202/invite/{ID}
+    http://localhost:3202/invites/invite/{ID}
     ``` 
     where the ID is the ID in the response from the previous request.
 
