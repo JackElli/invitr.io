@@ -5,6 +5,7 @@ import "../globals.css";
 export const metadata: Metadata = {
     title: "invitr.io",
 };
+export const USER = "123";
 
 export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
     return (

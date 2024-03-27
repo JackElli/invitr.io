@@ -2,38 +2,37 @@ import Button from "@/app/lib/components/Button";
 import ErrorCard from "@/app/lib/components/ErrorCard";
 import InviteService from "@/app/lib/services/InviteService";
 import { getDate, getDateRelative, isOver } from "@/app/lib/Date";
+import Person from "./components/Person";
 
 export default async function InvitePage({ params }: { params: { id: string } }) {
     try {
         const invite = await InviteService.getById(params.id);
-        const hasEventFinished = isOver(invite.date);
         return (
-            <>
+            <div>
                 <div className="border-b border-b-zinc-200 pb-4">
                     <div className="flex justify-between items-center">
-                        <h1 className="font-bold text-5xl flex-grow-0">{invite.title}</h1>
-                        <Button disabled className="flex-grow-0 min-w-32 border-red-300 text-red-500">Delete event</Button>
-                    </div>
+                        <div>
+                            <h1 className="font-bold text-5xl">{invite.title}</h1>
+                            <h1 className="font-semibold text-2xl mt-2">@ {invite.location}</h1>
+                            <h1 className="font-semibold text-xl mt-2">{getDate(invite.date)}</h1>
+                            <p className="text-sm bg-gray-200 inline-block px-2 rounded-sm">{getDateRelative(invite.date)}</p>
+                        </div>
 
-                    <h1 className="font-semibold text-2xl mt-2">{invite.location}</h1>
-                    <div className="flex gap-2 items-center mt-2">
-                        <h1 className="font-semibold text-xl">{getDate(invite.date)}</h1>
-                        <p className={`px-4   rounded-2xl border shadow-sm bg-gray-100 ${!hasEventFinished ? '  border-green-400 bg-green-200 font-bold' : 'border-red-200'}`}>{getDateRelative(invite.date)}</p>
+                        <Button disabled className="min-w-32 border-red-300 text-red-500">Delete event</Button>
                     </div>
-
                 </div>
 
                 <h1 className="text-xl font-bold mt-10">People invited</h1>
-                <div className="flex flex-col gap-2 mt-2">
+                <div className="flex flex-col gap-4 mt-2">
                     {
                         invite.invitees.map((person, count) => {
                             return (
-                                <p key={person + count}>{person}</p>
+                                <Person person={person} />
                             )
                         })
                     }
                 </div>
-            </>
+            </div>
         )
     } catch (e: any) {
         return (

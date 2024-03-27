@@ -7,12 +7,14 @@ export default function DashboardLayout({ children }: Readonly<{ children: React
     const isEventsSelected = pathname.includes("/dashboard/events");
     return (
         <>
-            <div className="border-b border-b-gray-200 pb-4">
-                <h1 className='text-3xl font-bold'>Welcome to invitr.io</h1>
-                <p className="text-sm">Start inviting people to your events.</p>
+            <div className="flex justify-between items-center border-b border-b-gray-200 pb-4">
+                <div>
+                    <h1 className='text-4xl font-bold w-96 lg:w-auto'>Welcome to invitr.io, Jack Ellis</h1>
+                    <p className="text-sm">Start inviting people to your events.</p>
+                </div>
 
                 <a href='/invite' className="inline-block mt-4">
-                    <Button >Start inviting</Button>
+                    <Button className="bg-green-100 min-w-32">Create invite</Button>
                 </a>
             </div>
 
