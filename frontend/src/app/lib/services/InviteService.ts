@@ -51,6 +51,16 @@ class InviteService {
     async getByUser(userId: string): Promise<Invite[]> {
         return NetworkService.get(`http://${SSR_IP}/invites/user/${userId}`);
     }
+
+    async isUserGoing(inviteId: string, user: string, tag?: string): Promise<boolean | null> {
+        return NetworkService.get(`http://${SSR_IP}/invites/invite/${inviteId}/user/${user}`, tag);
+    }
+
+    async respondToEvent(response: boolean, inviteId: string, user: string) {
+        return NetworkService.post(`http://${CLIENT_IP}/invites/invite/${inviteId}/user/${user}`, {
+            going: response
+        });
+    }
 }
 
 

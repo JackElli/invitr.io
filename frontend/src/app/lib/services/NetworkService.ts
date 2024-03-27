@@ -1,20 +1,23 @@
 import { redirect } from "next/navigation";
 
 class NetworkService {
-    async get(url: string): Promise<any> {
-        return this.call(url, 'GET');
+    async get(url: string, tag?: string): Promise<any> {
+        return this.call(url, 'GET', tag);
     }
 
-    async post(url: string, data: object): Promise<any> {
-        return this.call(url, 'POST', data);
+    async post(url: string, data: object, tag?: string): Promise<any> {
+        return this.call(url, 'POST', tag, data);
     }
 
-    async call(url: string, method: string, data?: object) {
+    async call(url: string, method: string, tag?: string, data?: object,) {
         const response = await fetch(url, {
             method: method,
             credentials: 'include',
             body: JSON.stringify(data),
-            cache: 'no-store'
+            cache: 'no-store',
+            next: {
+                tags: [tag ?? '']
+            }
         });
 
         if (!response.ok) {

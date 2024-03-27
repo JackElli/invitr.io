@@ -3,6 +3,7 @@ package invites
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -14,10 +15,11 @@ import (
 
 const (
 	ROOT   = "/invites"
-	BASE   = ROOT + "/invite"
 	USER   = ROOT + "/user/{userId}"
+	BASE   = ROOT + "/invite"
 	INVITE = BASE + "/{inviteId}"
 	NOTE   = INVITE + "/note"
+	EVENT  = INVITE + "/user/{user}"
 )
 
 type InviteMgr struct {
@@ -110,7 +112,7 @@ func (mgr *InviteMgr) AddNotes() func(w http.ResponseWriter, req *http.Request) 
 		var getnote InviteNote
 		json.NewDecoder(req.Body).Decode(&getnote)
 
-		err := mgr.InviteStore.Update(inviteId, "notes", getnote.Notes)
+		err := mgr.InviteStore.Update("invites", inviteId, "notes", getnote.Notes)
 		if err != nil {
 			mgr.Responder.Error(w, 400, err)
 			return
@@ -193,9 +195,69 @@ func (mgr *InviteMgr) ListInvitesByUser() func(w http.ResponseWriter, req *http.
 	}
 }
 
+// GetInvite retrieves an invite based on the id given
+func (mgr *InviteMgr) IsUserGoingToEvent() func(w http.ResponseWriter, req *http.Request) {
+	return func(w http.ResponseWriter, req *http.Request) {
+		inviteId := mux.Vars(req)["inviteId"]
+		user := mux.Vars(req)["user"]
+
+		// TODO could we make the table names const?
+		rows, err := mgr.InviteStore.Query(
+			fmt.Sprintf("SELECT is_going FROM invites_invitees WHERE invite_id='%s' AND invitee='%s'",
+				inviteId, user),
+		)
+		if err != nil {
+			mgr.Responder.Error(w, 400, err)
+			return
+		}
+
+		var going *bool
+		for rows.Next() {
+			rows.Scan(&going)
+		}
+
+		mgr.Responder.Respond(w, http.StatusOK, going)
+	}
+}
+
+type EventResponse struct {
+	Going bool `json:"going"`
+}
+
+// GetInvite retrieves an invite based on the id given
+func (mgr *InviteMgr) RespondToEvent() func(w http.ResponseWriter, req *http.Request) {
+	return func(w http.ResponseWriter, req *http.Request) {
+		inviteId := mux.Vars(req)["inviteId"]
+		user := mux.Vars(req)["user"]
+
+		var eventresp EventResponse
+		json.NewDecoder(req.Body).Decode(&eventresp)
+
+		// TODO can we find a more elegant way of doing this?
+		going := 0
+		if eventresp.Going {
+			going = 1
+		}
+
+		// TODO could we make the table names const?
+		_, err := mgr.InviteStore.Query(
+			fmt.Sprintf("UPDATE invites_invitees SET is_going='%d' WHERE invite_id='%s' AND invitee='%s'",
+				going, inviteId, user),
+		)
+		if err != nil {
+			mgr.Responder.Error(w, 400, err)
+			return
+		}
+
+		mgr.Responder.Respond(w, http.StatusOK, "Successfully updated going field")
+	}
+}
+
 func (mgr *InviteMgr) Register() {
 	mgr.Router.HandleFunc(BASE, mgr.NewInvite()).Methods("POST")
 	mgr.Router.HandleFunc(NOTE, mgr.AddNotes()).Methods("POST")
 	mgr.Router.HandleFunc(INVITE, mgr.GetInvite()).Methods("GET")
 	mgr.Router.HandleFunc(USER, mgr.ListInvitesByUser()).Methods("GET")
+	mgr.Router.HandleFunc(EVENT, mgr.IsUserGoingToEvent()).Methods("GET")
+	mgr.Router.HandleFunc(EVENT, mgr.RespondToEvent()).Methods("POST")
 }
