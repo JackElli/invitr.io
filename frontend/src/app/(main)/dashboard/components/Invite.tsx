@@ -17,7 +17,7 @@ const Invite = ({ _key, invite }: Props) => {
                         <div className='h-3 w-3 bg-yellow-300 rounded-sm' title="You are the organiser of this event"></div>}
                 </div>
 
-                <p><span className="font-bold">{getDate(invite.date)}</span> at {invite.location}</p>
+                <p><span className="font-bold">{getDate(invite.date)}</span> @ {invite.location}</p>
             </div>
 
             <p className="text-sm bg-gray-200 inline-block px-2 rounded-sm">{getDateRelative(invite.date)}</p>

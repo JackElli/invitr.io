@@ -1,8 +1,9 @@
-import Button from "@/app/lib/components/Button";
 import ErrorCard from "@/app/lib/components/ErrorCard";
 import InviteService from "@/app/lib/services/InviteService";
-import { getDate, getDateRelative, isOver } from "@/app/lib/Date";
-import Person from "./components/Person";
+import PeopleInvited from "./components/PeopleInvited";
+import Notes from "./components/Notes";
+import InviteOverview from "./components/InviteOverview";
+import DeleteButton from "./components/DeleteButton";
 
 export default async function InvitePage({ params }: { params: { id: string } }) {
     try {
@@ -11,27 +12,14 @@ export default async function InvitePage({ params }: { params: { id: string } })
             <div>
                 <div className="border-b border-b-zinc-200 pb-4">
                     <div className="flex justify-between items-center">
-                        <div>
-                            <h1 className="font-bold text-5xl">{invite.title}</h1>
-                            <h1 className="font-semibold text-2xl mt-2">@ {invite.location}</h1>
-                            <h1 className="font-semibold text-xl mt-2">{getDate(invite.date)}</h1>
-                            <p className="text-sm bg-gray-200 inline-block px-2 rounded-sm">{getDateRelative(invite.date)}</p>
-                        </div>
-
-                        <Button disabled className="min-w-32 border-red-300 text-red-500">Delete event</Button>
+                        <InviteOverview invite={invite} />
+                        <DeleteButton disabled>Delete event</DeleteButton>
                     </div>
                 </div>
 
-                <h1 className="text-xl font-bold mt-10">People invited</h1>
-                <div className="flex flex-col gap-4 mt-2">
-                    {
-                        invite.invitees.map((person, count) => {
-                            return (
-                                <Person person={person} />
-                            )
-                        })
-                    }
-                </div>
+                <PeopleInvited invite={invite} />
+
+                <Notes invite={invite} />
             </div>
         )
     } catch (e: any) {
