@@ -7,6 +7,7 @@ type Invite struct {
 	Title      string   `json:"title"`
 	Organiser  string   `json:"organiser"`
 	Location   string   `json:"location"`
+	Notes      string   `json:"notes"`
 	Date       string   `json:"date"`
 	Passphrase string   `json:"passphrase"`
 	Invitees   []Person `json:"invitees"`

@@ -14,6 +14,7 @@ type InviteStorer interface {
 	Get(id string) (*InviteDB, error)
 	ListByUser(userId string) ([]InviteDB, error)
 	Insert(invite *InviteDB) (*InviteDB, error)
+	Update(inviteId string, fieldName string, fieldValue string) error
 
 	// Remove(userId string) error
 	// Add these in later (not needed for now)
@@ -28,7 +29,7 @@ type InviteStore struct {
 
 func NewInviteStore(logger *zap.Logger, db *sql.DB) *InviteStore {
 	// need to create the table if it doesn't exist
-	_, err := db.Query("CREATE TABLE IF NOT EXISTS invites (id varchar(50) NOT NULL, title varchar(50) NOT NULL, organiser varchar(50) NOT NULL, location varchar(50) NOT NULL, date DATETIME NOT NULL, qr_code varchar(1024) NOT NULL, passphrase varchar(50) NOT NULL);")
+	_, err := db.Query("CREATE TABLE IF NOT EXISTS invites (id varchar(50) NOT NULL, title varchar(50) NOT NULL, organiser varchar(50) NOT NULL, location varchar(50) NOT NULL, notes varchar(255), date DATETIME NOT NULL, qr_code varchar(1024) NOT NULL, passphrase varchar(50) NOT NULL);")
 
 	if err != nil {
 		logger.Error(err.Error())
@@ -60,13 +61,13 @@ func (store *InviteStore) Get(id string) (*InviteDB, error) {
 	// we then need to aggregate the invitees into a json list. Once we have the
 	// query response, the invitees will be in bytes so we need to json unmarshal
 	// to turn it into a string list.
-	query := fmt.Sprintf("SELECT i.id, i.title, i.organiser, i.location, i.date, i.qr_code, i.passphrase, IF(ii.invitee IS NOT NULL, JSON_ARRAYAGG(JSON_OBJECT('name', ii.invitee, 'is_going', ii.is_going)), NULL) as invitees FROM invites i LEFT JOIN invites_invitees ii ON ii.invite_id=i.id WHERE i.id='%s'", id)
+	query := fmt.Sprintf("SELECT i.id, i.title, i.organiser, i.location, i.notes, i.date, i.qr_code, i.passphrase, IF(ii.invitee IS NOT NULL, JSON_ARRAYAGG(JSON_OBJECT('name', ii.invitee, 'is_going', ii.is_going)), NULL) as invitees FROM invites i LEFT JOIN invites_invitees ii ON ii.invite_id=i.id WHERE i.id='%s'", id)
 	row := store.db.QueryRow(query)
 
 	var invite InviteDB
 	var invitees []byte
 	switch err := row.Scan(&invite.Id, &invite.Title, &invite.Organiser,
-		&invite.Location, &invite.Date, &invite.QRCode, &invite.Passphrase,
+		&invite.Location, &invite.Notes, &invite.Date, &invite.QRCode, &invite.Passphrase,
 		&invitees); err {
 	case sql.ErrNoRows:
 		return nil, nil
@@ -114,7 +115,7 @@ func (store *InviteStore) Insert(invite *InviteDB) (*InviteDB, error) {
 
 	// TODO for the QR code, can we use a byte array instead of JSON string
 	// we will probably need to use %v for the format.
-	query := fmt.Sprintf("INSERT INTO invites (id, title, organiser, location, date, qr_code, passphrase) VALUES ('%s','%s', '%s', '%s', '%s', '%s', '%s')", id, invite.Title, invite.Organiser, invite.Location, invite.Date, invite.QRCode, invite.Passphrase)
+	query := fmt.Sprintf("INSERT INTO invites (id, title, organiser, location, notes, date, qr_code, passphrase) VALUES ('%s','%s', '%s', '%s', '%s', '%s', '%s', '%s')", id, invite.Title, invite.Organiser, invite.Location, invite.Notes, invite.Date, invite.QRCode, invite.Passphrase)
 
 	_, err := store.db.Query(query)
 	if err != nil {
@@ -134,4 +135,14 @@ func (store *InviteStore) Insert(invite *InviteDB) (*InviteDB, error) {
 
 	invite.Id = id.String()
 	return invite, err
+}
+
+// Update updates a field within the invites table
+// TODO make this work with other data types
+func (store *InviteStore) Update(inviteId string, fieldName string, fieldValue string) error {
+	query := fmt.Sprintf("UPDATE invites SET %s='%s' WHERE id='%s'", fieldName, fieldValue, inviteId)
+
+	_, err := store.db.Query(query)
+
+	return err
 }
