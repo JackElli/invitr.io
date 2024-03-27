@@ -26,13 +26,13 @@ const Notes = ({ invite, editable = false }: Props) => {
     }
 
     return (
-        <div className="pb-6 border-b border-b-gray-200">
+        <div className="pb-6">
             <h1 className="text-xl font-bold mt-10">Notes</h1>
             <p className="text-sm text-gray-400">(Double click to edit)</p>
             <div className="mt-4">
                 {editing ?
-                    <textarea onBlur={() => saveNote()} value={notes} onChange={(e) => { setNotes(e.target.value) }} className="mt-2 w-full rounded-sm p-4 outline-none border border-gray-300" autoFocus></textarea> :
-                    <p className="text-xl" onDoubleClick={() => setEditing(true)}>{notes}</p>
+                    <textarea onBlur={() => saveNote()} value={notes} onChange={(e) => { setNotes(e.target.value) }} className="w-full rounded-md p-4 outline-none border border-gray-300" autoFocus></textarea> :
+                    <p className="text-xl bg-white p-4 rounded-md border border-gray-200" onDoubleClick={() => setEditing(true)}>{notes}</p>
                 }
             </div>
 

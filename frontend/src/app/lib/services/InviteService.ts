@@ -48,7 +48,7 @@ class InviteService {
         return NetworkService.get(`http://${SSR_IP}/invites/invite/${id}`);
     }
 
-    async getByUser(userId: string): Promise<Invite[]> {
+    async getByUser(userId: string): Promise<{ finished: Invite[], ongoing: Invite[] }> {
         return NetworkService.get(`http://${SSR_IP}/invites/user/${userId}`);
     }
 

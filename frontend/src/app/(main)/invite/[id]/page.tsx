@@ -16,7 +16,7 @@ export default async function InvitePage({ params }: { params: { id: string } })
         if (invite.organiser != USER) {
             return (
                 <div>
-                    <div className="border-b border-b-zinc-200 pb-4">
+                    <div>
                         <div className="flex justify-between items-center">
                             <InviteOverview invite={invite} />
                             <ChangeGoing invite={invite} />
@@ -31,7 +31,7 @@ export default async function InvitePage({ params }: { params: { id: string } })
         // event IS owned by the user that's logged in
         return (
             <div>
-                <div className="border-b border-b-zinc-200 pb-4">
+                <div>
                     <div className="flex justify-between items-center">
                         <InviteOverview invite={invite} />
                         <DeleteButton disabled>Delete event</DeleteButton>

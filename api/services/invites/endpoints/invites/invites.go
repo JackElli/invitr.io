@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
@@ -170,13 +171,13 @@ func (mgr *InviteMgr) ListInvitesByUser() func(w http.ResponseWriter, req *http.
 			return
 		}
 
-		invitesJSON := make([]invitestore.InviteJSON, 0)
+		invitesJSON := make(map[string][]invitestore.InviteJSON, 0)
 
-		// need to change bytes to QR from db and then
-		// return in the JSON format
 		for _, invite := range invites {
+			// need to change bytes to QR from db and then
 			qrcode := invites_pkg.BytesToQR([]byte(invite.QRCode))
-			invitesJSON = append(invitesJSON, invitestore.InviteJSON{
+			// return in the JSON format
+			inviteJSON := invitestore.InviteJSON{
 				Invite: invitestore.Invite{
 					Id:         invite.Id,
 					Title:      invite.Title,
@@ -187,8 +188,15 @@ func (mgr *InviteMgr) ListInvitesByUser() func(w http.ResponseWriter, req *http.
 					Invitees:   invite.Invitees,
 				},
 				QRCode: qrcode,
-			})
+			}
 
+			// check if date of event has passed
+			date, _ := time.Parse("2006-01-02 15:04:05", invite.Date)
+			if date.After(time.Now()) {
+				invitesJSON["ongoing"] = append(invitesJSON["ongoing"], inviteJSON)
+			} else {
+				invitesJSON["finished"] = append(invitesJSON["finished"], inviteJSON)
+			}
 		}
 
 		mgr.Responder.Respond(w, http.StatusOK, invitesJSON)
