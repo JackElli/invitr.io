@@ -14,18 +14,18 @@ export default function DashboardLayout({ children }: Readonly<{ children: React
                 </div>
 
                 <a href='/invite' className="inline-block mt-4">
-                    <Button className="bg-green-200 min-w-32">Create invite</Button>
+                    <Button className="bg-green-100 min-w-32">Create invite</Button>
                 </a>
             </div>
 
             <div className="mt-8">
                 <div className="flex gap-4">
-                    {/* can we break these into their own components */}
+                    {/* can we break these into their own components? */}
                     <a href="/dashboard/events">
-                        <h1 className={`text-xl font-bold ${isEventsSelected ? 'border-b-2 pb-1 border-b-gray-600' : 'text-gray-800'}`}>Your events</h1>
+                        <h1 className={`text-xl font-bold border-b-2 pb-1 ${isEventsSelected ? ' border-b-gray-600' : 'text-gray-800 border-transparent hover:border-b-gray-600'}`}>Your events</h1>
                     </a>
                     <a href="/dashboard/invites">
-                        <h1 className={`text-xl font-bold ${!isEventsSelected ? 'border-b-2 pb-1 border-b-gray-600' : 'text-gray-800'}`} >Pending invites</h1>
+                        <h1 className={`text-xl font-bold border-b-2 pb-1 ${!isEventsSelected ? ' border-b-gray-600 ' : 'text-gray-800 border-transparent hover:border-b-gray-600'}`} >Pending invites</h1>
                     </a>
 
                 </div>
