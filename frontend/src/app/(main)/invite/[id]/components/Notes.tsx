@@ -1,22 +1,32 @@
 'use client'
 import InviteService, { Invite } from "@/app/lib/services/InviteService";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 
 type Props = {
     invite: Invite;
+    editable?: boolean;
 }
 
-const Notes = ({ invite }: Props) => {
+const Notes = ({ invite, editable = false }: Props) => {
     const [editing, setEditing] = useState(false);
-    const [notes, setNotes] = useState(invite.notes == "" ? "Double click here to add event notes." : invite.notes);
+    const [notes, setNotes] = useState(invite.notes == "" ? "No notes found" : invite.notes);
 
     const saveNote = () => {
         setEditing(false);
         InviteService.addNotes(invite.id, notes);
     }
 
+    if (!editable) {
+        return (
+            <>
+                <h1 className="text-xl font-bold mt-10">Notes</h1>
+                <p className="text-xl">{notes}</p>
+            </>
+        )
+    }
+
     return (
-        <>
+        <div className="pb-6 border-b border-b-gray-200">
             <h1 className="text-xl font-bold mt-10">Notes</h1>
             <p className="text-sm text-gray-400">(Double click to edit)</p>
             <div className="mt-4">
@@ -26,7 +36,7 @@ const Notes = ({ invite }: Props) => {
                 }
             </div>
 
-        </>
+        </div>
     )
 }
 
