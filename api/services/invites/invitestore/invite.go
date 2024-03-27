@@ -15,7 +15,7 @@ type Invite struct {
 
 type Person struct {
 	Name    string `json:"name"`
-	IsGoing int8   `json:"is_going,omitempty"`
+	IsGoing *int8  `json:"is_going"`
 }
 
 type InviteDB struct {

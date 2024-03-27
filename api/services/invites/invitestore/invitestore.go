@@ -14,11 +14,11 @@ type InviteStorer interface {
 	Get(id string) (*InviteDB, error)
 	ListByUser(userId string) ([]InviteDB, error)
 	Insert(invite *InviteDB) (*InviteDB, error)
-	Update(inviteId string, fieldName string, fieldValue string) error
-
+	Update(table string, inviteId string, fieldName string, fieldValue string) error
+	Query(querystr string) (*sql.Rows, error)
 	// Remove(userId string) error
 	// Add these in later (not needed for now)
-	// Query(querystr string, options *gocb.QueryOptions) ([]Grumble, error)
+	//
 	// Update(id string, grumble *Grumble) error
 }
 
@@ -139,10 +139,16 @@ func (store *InviteStore) Insert(invite *InviteDB) (*InviteDB, error) {
 
 // Update updates a field within the invites table
 // TODO make this work with other data types
-func (store *InviteStore) Update(inviteId string, fieldName string, fieldValue string) error {
-	query := fmt.Sprintf("UPDATE invites SET %s='%s' WHERE id='%s'", fieldName, fieldValue, inviteId)
+func (store *InviteStore) Update(table string, inviteId string, fieldName string, fieldValue string) error {
+	query := fmt.Sprintf("UPDATE %s SET %s='%s' WHERE id='%s'", table, fieldName, fieldValue, inviteId)
 
 	_, err := store.db.Query(query)
 
 	return err
+}
+
+// Query runs a custom query on the DB (need to be careful here :) )
+func (store *InviteStore) Query(query string) (*sql.Rows, error) {
+	rows, err := store.db.Query(query)
+	return rows, err
 }
