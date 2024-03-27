@@ -17,6 +17,7 @@ const (
 	BASE   = ROOT + "/invite"
 	USER   = ROOT + "/user/{userId}"
 	INVITE = BASE + "/{inviteId}"
+	NOTE   = INVITE + "/note"
 )
 
 type InviteMgr struct {
@@ -97,6 +98,28 @@ func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request)
 	}
 }
 
+type InviteNote struct {
+	Notes string `json:"notes"`
+}
+
+// AddNotes adds notes to a given invite based on its ID
+func (mgr *InviteMgr) AddNotes() func(w http.ResponseWriter, req *http.Request) {
+	return func(w http.ResponseWriter, req *http.Request) {
+		inviteId := mux.Vars(req)["inviteId"]
+
+		var getnote InviteNote
+		json.NewDecoder(req.Body).Decode(&getnote)
+
+		err := mgr.InviteStore.Update(inviteId, "notes", getnote.Notes)
+		if err != nil {
+			mgr.Responder.Error(w, 400, err)
+			return
+		}
+
+		mgr.Responder.Respond(w, http.StatusCreated, "Successfully updated notes")
+	}
+}
+
 // GetInvite retrieves an invite based on the id given
 func (mgr *InviteMgr) GetInvite() func(w http.ResponseWriter, req *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
@@ -122,6 +145,7 @@ func (mgr *InviteMgr) GetInvite() func(w http.ResponseWriter, req *http.Request)
 				Title:      invite.Title,
 				Organiser:  invite.Organiser,
 				Location:   invite.Location,
+				Notes:      invite.Notes,
 				Date:       invite.Date,
 				Passphrase: invite.Passphrase,
 				Invitees:   invite.Invitees,
@@ -171,6 +195,7 @@ func (mgr *InviteMgr) ListInvitesByUser() func(w http.ResponseWriter, req *http.
 
 func (mgr *InviteMgr) Register() {
 	mgr.Router.HandleFunc(BASE, mgr.NewInvite()).Methods("POST")
+	mgr.Router.HandleFunc(NOTE, mgr.AddNotes()).Methods("POST")
 	mgr.Router.HandleFunc(INVITE, mgr.GetInvite()).Methods("GET")
 	mgr.Router.HandleFunc(USER, mgr.ListInvitesByUser()).Methods("GET")
 }

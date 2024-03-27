@@ -14,7 +14,7 @@ export default function DashboardLayout({ children }: Readonly<{ children: React
                 </div>
 
                 <a href='/invite' className="inline-block mt-4">
-                    <Button className="bg-green-100 min-w-32">Create invite</Button>
+                    <Button className="bg-green-200 min-w-32">Create invite</Button>
                 </a>
             </div>
 

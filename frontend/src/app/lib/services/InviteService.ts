@@ -10,6 +10,7 @@ export type Invite = {
     title: string;
     organiser: string;
     location: string;
+    notes: string;
     date: string;
     passphrase: string;
     invitees: Person[];
@@ -34,6 +35,12 @@ class InviteService {
             date: date,
             passphrase: passphrase,
             invitees: invitees
+        });
+    }
+
+    async addNotes(inviteId: string, notes: string) {
+        NetworkService.post(`http://${CLIENT_IP}/invites/invite/${inviteId}/note`, {
+            notes: notes
         });
     }
 
