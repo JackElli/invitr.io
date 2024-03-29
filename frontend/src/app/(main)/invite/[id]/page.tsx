@@ -4,24 +4,33 @@ import PeopleInvited from "./components/PeopleInvited";
 import Notes from "./components/Notes";
 import InviteOverview from "./components/InviteOverview";
 import DeleteButton from "./components/DeleteButton";
-import { USER } from "../../layout";
 import { ChangeGoing } from "./components/ChangeGoing";
 
 
-export default async function InvitePage({ params }: { params: { id: string } }) {
+export default async function InvitePage({ params, searchParams }: { params: { id: string }, searchParams: { [key: string]: string | string[] | undefined } }) {
     try {
         const invite = await InviteService.getById(params.id);
 
+        const key = searchParams['key'] as string;
+        const USER = await InviteService.getUserFromKey(invite.id, key);
+
+        if (!USER) {
+            return <p>You are not allowed to be here :)</p>
+        }
+
         // event is NOT owned by the user that's logged in
+        // need to check if they've got the correct key
         if (invite.organiser != USER) {
             return (
                 <div>
                     <div>
                         <div className="flex justify-between items-center">
                             <InviteOverview invite={invite} />
-                            <ChangeGoing invite={invite} />
+                            <ChangeGoing invite={invite} searchParams={searchParams} />
                         </div>
                     </div>
+
+                    <PeopleInvited invite={invite} />
 
                     <Notes invite={invite} />
                 </div>
@@ -38,9 +47,9 @@ export default async function InvitePage({ params }: { params: { id: string } })
                     </div>
                 </div>
 
-                <Notes invite={invite} editable />
-
                 <PeopleInvited invite={invite} />
+
+                <Notes invite={invite} editable />
             </div>
         )
     } catch (e: any) {

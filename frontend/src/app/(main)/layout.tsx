@@ -1,18 +1,15 @@
-import type { Metadata } from "next";
 import Header from "../lib/components/Header";
 import "../globals.css";
 
-export const metadata: Metadata = {
-    title: "invitr.io",
-};
-export const USER = "123";
+
+export const USER = "1232";
 
 export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
     return (
         <html lang="en">
-            <body className="bg-[#f6f6f6]">
+            <body className="bg-[#f6f6f6] pb-20">
                 <Header />
-                <div className="w-3/4 mx-auto mt-10">
+                <div>
                     {children}
                 </div>
             </body>
