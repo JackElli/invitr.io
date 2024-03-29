@@ -14,7 +14,7 @@ type Invite struct {
 }
 
 type Person struct {
-	Name    string `json:"name"`
+	Id      string `json:"id"`
 	IsGoing *int8  `json:"is_going"`
 }
 

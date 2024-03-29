@@ -58,7 +58,7 @@ func (store *InviteStore) Get(id string) (*InviteDB, error) {
 	// we then need to aggregate the invitees into a json list. Once we have the
 	// query response, the invitees will be in bytes so we need to json unmarshal
 	// to turn it into a string list.
-	query := fmt.Sprintf("SELECT i.id, i.title, i.organiser, i.location, i.notes, i.date, i.qr_code, i.passphrase, IF(ii.invitee IS NOT NULL, JSON_ARRAYAGG(JSON_OBJECT('name', ii.invitee, 'is_going', ii.is_going)), NULL) as invitees FROM invites i LEFT JOIN invites_invitees ii ON ii.invite_id=i.id WHERE i.id='%s'", id)
+	query := fmt.Sprintf("SELECT i.id, i.title, i.organiser, i.location, i.notes, i.date, i.qr_code, i.passphrase, IF(ii.invitee IS NOT NULL, JSON_ARRAYAGG(JSON_OBJECT('id', ii.invitee, 'is_going', ii.is_going)), NULL) as invitees FROM invites i LEFT JOIN invites_invitees ii ON ii.invite_id=i.id WHERE i.id='%s'", id)
 	row := store.db.QueryRow(query)
 
 	var invite InviteDB
@@ -126,7 +126,7 @@ func (store *InviteStore) Insert(invite *InviteDB) (*InviteDB, error) {
 	// prepend the organiser to the invitees
 	invite.Invitees = append([]Person{
 		{
-			Name:    invite.Organiser,
+			Id:      invite.Organiser,
 			IsGoing: going,
 		},
 	}, invite.Invitees...)
@@ -135,7 +135,7 @@ func (store *InviteStore) Insert(invite *InviteDB) (*InviteDB, error) {
 	for _, invitee := range invite.Invitees {
 		inviteInviteeId, _ := uuid.NewV7()
 		inviteKey, _ := uuid.NewV7()
-		query := fmt.Sprintf("INSERT INTO invites_invitees (id, invite_id, invitee, invite_key) VALUES ('%s','%s', '%s', '%s')", inviteInviteeId, id, string(invitee.Name), inviteKey)
+		query := fmt.Sprintf("INSERT INTO invites_invitees (id, invite_id, invitee, invite_key) VALUES ('%s','%s', '%s', '%s')", inviteInviteeId, id, string(invitee.Id), inviteKey)
 
 		_, err := store.db.Query(query)
 		if err != nil {

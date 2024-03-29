@@ -2,7 +2,7 @@ import { USER } from "@/app/(main)/layout";
 import NetworkService from "./NetworkService";
 
 export type Person = {
-    name: string;
+    id: string;
     is_going?: boolean;
 }
 
@@ -25,7 +25,7 @@ class InviteService {
     async new(title: string, location: string, date: string, passphrase: string, people: string) {
         const invitees = people.split(",").map((p) => {
             return {
-                "name": p.trim(),
+                "id": p.trim(),
             }
         });
 
