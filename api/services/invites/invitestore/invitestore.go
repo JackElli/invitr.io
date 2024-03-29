@@ -123,11 +123,13 @@ func (store *InviteStore) Insert(invite *InviteDB) (*InviteDB, error) {
 	var going_ int8 = 1
 	going := &going_
 
-	// add the organiser to the invitees
-	invite.Invitees = append(invite.Invitees, Person{
-		Name:    invite.Organiser,
-		IsGoing: going,
-	})
+	// prepend the organiser to the invitees
+	invite.Invitees = append([]Person{
+		{
+			Name:    invite.Organiser,
+			IsGoing: going,
+		},
+	}, invite.Invitees...)
 
 	// need to add the invitees to the pivot table
 	for _, invitee := range invite.Invitees {

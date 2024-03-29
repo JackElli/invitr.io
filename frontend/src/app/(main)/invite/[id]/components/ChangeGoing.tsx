@@ -13,13 +13,13 @@ export async function ChangeGoing({ invite, searchParams }: { invite: Invite, se
 
         // Do this again here for security (better to check key twice)
         const key = searchParams['key'] as string;
-        const username = await InviteService.getUserFromKey(invite.id, key)
+        const userId = await InviteService.getUserFromKey(invite.id, key)
 
-        if (!username) {
+        if (!userId) {
             return <p>You are not allowed to be here :)</p>
         }
 
-        const isGoing = await InviteService.isUserGoing(invite.id, username, "going");
+        const isGoing = await InviteService.isUserGoing(invite.id, userId, "going");
 
         if (isGoing == true) {
             return <p className="bg-green-200 px-2 py-1 rounded-xl shadow-md">You accepted</p>
@@ -36,11 +36,11 @@ export async function ChangeGoing({ invite, searchParams }: { invite: Invite, se
                 <div className="bg-white p-4 border border-gray-200 rounded-md shadow-lg">
                     <div className="flex gap-2 justify-center">
                         <form action={action}>
-                            <AcceptButton invite={invite} username={username} />
+                            <AcceptButton invite={invite} user={userId} />
                         </form>
 
                         <form action={action}>
-                            <RejectButton invite={invite} username={username} />
+                            <RejectButton invite={invite} user={userId} />
                         </form>
                     </div>
                 </div >

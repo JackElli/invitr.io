@@ -5,7 +5,7 @@ import Textbox from "@/app/lib/components/Textbox";
 import InviteService from "@/app/lib/services/InviteService";
 import { useRouter } from "next/navigation";
 
-import { ChangeEvent, createRef, useEffect, useState } from "react"
+import { ChangeEvent, useEffect, useRef, useState } from "react"
 
 type Inputs = {
     title: string;
@@ -17,7 +17,7 @@ type Inputs = {
 
 export default function NewInvitePage() {
 
-    const titleInput = createRef<HTMLInputElement>();
+    const titleInput = useRef<HTMLInputElement>(null);
     const router = useRouter();
 
     const [inputs, setInputs] = useState<Inputs>({
@@ -40,7 +40,6 @@ export default function NewInvitePage() {
     }
 
     const createEvent = () => {
-
         if (inputs.title == "" || inputs.location == "" || inputs.date == "" || inputs.passphrase == "" || inputs.people == "") {
             return;
         }
@@ -91,9 +90,7 @@ export default function NewInvitePage() {
                     <div className="mt-2">
                         <Textbox name="people" className="w-96" value={inputs.people} onChange={dataOnChange}>Add people (comma separated for now)</Textbox>
                     </div>
-
                 </div>
-
             </div>
         </>
     )
