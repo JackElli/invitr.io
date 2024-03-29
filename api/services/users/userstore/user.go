@@ -1,6 +1,7 @@
 package userstore
 
 type User struct {
-	UserId   string `json:"userId"`
-	Username string `json:"username"`
+	Id        *string `json:"id"`
+	FirstName string  `json:"firstName"`
+	LastName  string  `json:"lastName"`
 }

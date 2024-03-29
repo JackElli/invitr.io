@@ -49,6 +49,7 @@ func (e *Endpoints) SetupEndpoints(env string, r *mux.Router) error {
 
 	// set up stores, this is where we interact with the db
 	userStore := userstore.NewUserStore(e.Logger, db)
+	userStore.InitDemoUser()
 
 	// add endpoints to the router
 	_ = user.NewUserMgr(public, e.Logger, responder, userStore)
