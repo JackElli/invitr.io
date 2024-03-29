@@ -39,7 +39,7 @@ func NewInviteStore(logger *zap.Logger, db *sql.DB) *InviteStore {
 	}
 
 	// will also need to create the pivot tables here too :)
-	_, err = db.Query("CREATE TABLE IF NOT EXISTS invites_invitees (id varchar(50) NOT NULL, invite_id varchar(50) NOT NULL, invitee varchar(50) NOT NULL, is_going boolean, message varchar(100));")
+	_, err = db.Query("CREATE TABLE IF NOT EXISTS invites_invitees (id varchar(50) NOT NULL, invite_id varchar(50) NOT NULL, invitee varchar(50) NOT NULL, is_going boolean, message varchar(100), invite_key varchar(50) NOT NULL);")
 
 	if err != nil {
 		logger.Error(err.Error())
@@ -82,7 +82,7 @@ func (store *InviteStore) Get(id string) (*InviteDB, error) {
 
 // GetByUser retrieves all invites created by a user
 func (store *InviteStore) ListByUser(userId string) ([]InviteDB, error) {
-	query := fmt.Sprintf("SELECT i.id, i.title, i.organiser, i.location, i.date, i.qr_code, i.passphrase, IF(ii.invitee IS NOT NULL, JSON_ARRAYAGG(ii.invitee), NULL) as invitees FROM invites i LEFT JOIN invites_invitees ii ON ii.invite_id=i.id WHERE i.organiser='%s' GROUP BY i.id ORDER BY i.date DESC", userId)
+	query := fmt.Sprintf("SELECT i.id, i.title, i.organiser, i.location, i.date, i.qr_code, i.passphrase, IF(ii.invitee IS NOT NULL, JSON_ARRAYAGG(ii.invitee), NULL) as invitees FROM invites i LEFT JOIN invites_invitees ii ON ii.invite_id=i.id WHERE i.organiser='%s' GROUP BY i.id ORDER BY i.date ASC", userId)
 	rows, err := store.db.Query(query)
 	if err != nil {
 		return nil, err
@@ -122,10 +122,21 @@ func (store *InviteStore) Insert(invite *InviteDB) (*InviteDB, error) {
 		return nil, err
 	}
 
+	// this is janky as anything
+	var going_ int8 = 1
+	going := &going_
+
+	// add the organiser to the invitees
+	invite.Invitees = append(invite.Invitees, Person{
+		Name:    invite.Organiser,
+		IsGoing: going,
+	})
+
 	// need to add the invitees to the pivot table
 	inviteInviteeId, _ := uuid.NewV7()
 	for _, invitee := range invite.Invitees {
-		query := fmt.Sprintf("INSERT INTO invites_invitees (id, invite_id, invitee) VALUES ('%s','%s', '%s')", inviteInviteeId, id, string(invitee.Name))
+		inviteKey, _ := uuid.NewV7()
+		query := fmt.Sprintf("INSERT INTO invites_invitees (id, invite_id, invitee, invite_key) VALUES ('%s','%s', '%s', '%s')", inviteInviteeId, id, string(invitee.Name), inviteKey)
 
 		_, err := store.db.Query(query)
 		if err != nil {

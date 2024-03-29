@@ -15,12 +15,14 @@ import (
 )
 
 const (
-	ROOT   = "/invites"
-	USER   = ROOT + "/user/{userId}"
-	BASE   = ROOT + "/invite"
-	INVITE = BASE + "/{inviteId}"
-	NOTE   = INVITE + "/note"
-	EVENT  = INVITE + "/user/{user}"
+	ROOT    = "/invites"
+	USER    = ROOT + "/user/{userId}"
+	BASE    = ROOT + "/invite"
+	INVITE  = BASE + "/{inviteId}"
+	NOTE    = INVITE + "/note"
+	EVENT   = INVITE + "/user/{user}"
+	ORG_KEY = EVENT + "/key"
+	KEY     = INVITE + "/key"
 )
 
 type InviteMgr struct {
@@ -261,11 +263,71 @@ func (mgr *InviteMgr) RespondToEvent() func(w http.ResponseWriter, req *http.Req
 	}
 }
 
+type UserKey struct {
+	Key string `json:"key"`
+}
+
+// GetUserFromKey retrieves an invite based on the id given
+func (mgr *InviteMgr) GetUserFromKey() func(w http.ResponseWriter, req *http.Request) {
+	return func(w http.ResponseWriter, req *http.Request) {
+		inviteId := mux.Vars(req)["inviteId"]
+
+		var userkey UserKey
+		json.NewDecoder(req.Body).Decode(&userkey)
+
+		rows, err := mgr.InviteStore.Query(
+			fmt.Sprintf("SELECT invitee FROM invites_invitees WHERE invite_id='%s' AND invite_key='%s'",
+				inviteId, userkey.Key),
+		)
+		if err != nil {
+			mgr.Responder.Error(w, 400, err)
+			return
+		}
+
+		var user *string
+		for rows.Next() {
+			rows.Scan(&user)
+		}
+
+		mgr.Responder.Respond(w, http.StatusOK, user)
+	}
+}
+
+// WARNING DANGER!!! This needs to be locked down!!! for now it's exposed
+// BUT WE NEED TO LOCK IT DOWN EVENTUALLY
+// MAYBE MAKE IT SO YOU NEED ANOTHER KEY TO GET THE KEY
+func (mgr *InviteMgr) GetOrganiserKey() func(w http.ResponseWriter, req *http.Request) {
+	return func(w http.ResponseWriter, req *http.Request) {
+		inviteId := mux.Vars(req)["inviteId"]
+		user := mux.Vars(req)["user"]
+
+		rows, err := mgr.InviteStore.Query(
+			fmt.Sprintf("SELECT invite_key FROM invites_invitees WHERE invite_id='%s' AND invitee='%s'",
+				inviteId, user),
+		)
+		if err != nil {
+			mgr.Responder.Error(w, 400, err)
+			return
+		}
+
+		var key *string
+		for rows.Next() {
+			rows.Scan(&key)
+		}
+
+		mgr.Responder.Respond(w, http.StatusOK, key)
+	}
+}
+
 func (mgr *InviteMgr) Register() {
 	mgr.Router.HandleFunc(BASE, mgr.NewInvite()).Methods("POST")
 	mgr.Router.HandleFunc(NOTE, mgr.AddNotes()).Methods("POST")
+	mgr.Router.HandleFunc(EVENT, mgr.RespondToEvent()).Methods("POST")
+	mgr.Router.HandleFunc(KEY, mgr.GetUserFromKey()).Methods("POST")
+	// DANGER PLEASE LOCK THIS DOWN!!!
+	mgr.Router.HandleFunc(ORG_KEY, mgr.GetOrganiserKey()).Methods("GET")
+
 	mgr.Router.HandleFunc(INVITE, mgr.GetInvite()).Methods("GET")
 	mgr.Router.HandleFunc(USER, mgr.ListInvitesByUser()).Methods("GET")
 	mgr.Router.HandleFunc(EVENT, mgr.IsUserGoingToEvent()).Methods("GET")
-	mgr.Router.HandleFunc(EVENT, mgr.RespondToEvent()).Methods("POST")
 }
