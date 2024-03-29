@@ -7,7 +7,9 @@ const Header = () => {
                 </a>
 
                 <div className="flex gap-3 items-center">
-                    <p className="text-sm text-gray-700 hover:underline cursor-pointer">Join event</p>
+                    <a href='/join'>
+                        <p className="text-sm text-gray-700 hover:underline cursor-pointer">Join event</p>
+                    </a>
                     <p className="text-sm text-gray-700 hover:underline cursor-pointer">About</p>
                 </div>
 
