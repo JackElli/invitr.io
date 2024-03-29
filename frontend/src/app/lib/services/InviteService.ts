@@ -1,3 +1,4 @@
+import { USER } from "@/app/(main)/layout";
 import NetworkService from "./NetworkService";
 
 export type Person = {
@@ -30,7 +31,7 @@ class InviteService {
 
         NetworkService.post(`http://${CLIENT_IP}/invites/invite`, {
             title: title,
-            organiser: "123",
+            organiser: USER,
             location: location,
             date: date,
             passphrase: passphrase,
@@ -56,11 +57,25 @@ class InviteService {
         return NetworkService.get(`http://${SSR_IP}/invites/invite/${inviteId}/user/${user}`, tag);
     }
 
+    async getUserFromKey(inviteId: string, key: string): Promise<string | null> {
+        return NetworkService.post(`http://${SSR_IP}/invites/invite/${inviteId}/key`, {
+            key: key
+        });
+    }
+
+    ////////////////////////////////////////////////////////
+    //WARNING THIS NEEDS TO BE SECURED AND MIGHT BE REMOVED
+    async getOrganiserKey(inviteId: string, user: string): Promise<string | null> {
+        return NetworkService.get(`http://${SSR_IP}/invites/invite/${inviteId}/user/${user}/key`);
+    }
+    ////////////////////////////////////////////////////////
+
     async respondToEvent(response: boolean, inviteId: string, user: string) {
         return NetworkService.post(`http://${CLIENT_IP}/invites/invite/${inviteId}/user/${user}`, {
             going: response
         });
     }
+
 }
 
 

@@ -95,7 +95,6 @@ export default function NewInvitePage() {
                 </div>
 
             </div>
-
         </>
     )
 }
