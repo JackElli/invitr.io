@@ -32,6 +32,10 @@ export default async function DashboardLayout({ children }: Readonly<{ children:
             </>
         )
     } catch (e) {
-        return <ErrorCard />
+        return (
+            <div className="w-3/4 mx-auto mt-2 flex justify-center items-center">
+                <ErrorCard />
+            </div>
+        )
     }
 }
