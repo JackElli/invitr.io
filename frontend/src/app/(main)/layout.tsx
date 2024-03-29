@@ -2,7 +2,7 @@ import Header from "../lib/components/Header";
 import "../globals.css";
 
 
-export const USER = "1232";
+export const USER = "123";
 
 export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {
     return (

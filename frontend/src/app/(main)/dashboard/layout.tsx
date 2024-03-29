@@ -1,6 +1,7 @@
 'use client'
 import Button from "@/app/lib/components/Button";
 import { usePathname } from 'next/navigation'
+import { USER } from "../layout";
 
 export default function DashboardLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
     const pathname = usePathname();
@@ -10,7 +11,7 @@ export default function DashboardLayout({ children }: Readonly<{ children: React
             <div className="bg-gradient-to-r from-[#e1f9fc] to-white border-b border-b-gray-200 py-4">
                 <div className="w-3/4 mx-auto flex justify-between items-center">
                     <div>
-                        <h1 className='text-4xl font-bold w-96 lg:w-auto'>Welcome to invitr.io, Jack Ellis</h1>
+                        <h1 className='text-4xl font-bold w-96 lg:w-auto'>Welcome to invitr.io, <span className="font-semibold">{USER}</span></h1>
                         <p className="text-sm">Start inviting people to your events.</p>
                     </div>
 
