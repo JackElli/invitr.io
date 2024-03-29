@@ -7,16 +7,20 @@ func NewUserStoreMock() *UserStoreMock {
 }
 
 func (store *UserStoreMock) Get(id string) (*User, error) {
+	mockId := "1234"
 	return &User{
-		UserId:   "1234",
-		Username: "Jack",
+		Id:        &mockId,
+		FirstName: "Jack",
+		LastName:  "Ellis",
 	}, nil
 }
 
 func (store *UserStoreMock) Insert(user *User) (*User, error) {
+	mockId := "1234"
 	return &User{
-		UserId:   "1234",
-		Username: "Jack",
+		Id:        &mockId,
+		FirstName: "Jack",
+		LastName:  "Ellis",
 	}, nil
 }
 

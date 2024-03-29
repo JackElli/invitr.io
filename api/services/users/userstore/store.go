@@ -25,7 +25,7 @@ type UserStore struct {
 
 func NewUserStore(logger *zap.Logger, db *sql.DB) *UserStore {
 	// need to create the table if it doesn't exist
-	_, err := db.Query("CREATE TABLE IF NOT EXISTS users (id varchar(50) NOT NULL, username varchar(50) NOT NULL);")
+	_, err := db.Query("CREATE TABLE IF NOT EXISTS users (id varchar(50) NOT NULL, first_name varchar(50) NOT NULL, last_name varchar(50) NOT NULL);")
 	if err != nil {
 		logger.Error(err.Error())
 		// if we cannot connect to the db, we panic
@@ -40,13 +40,25 @@ func NewUserStore(logger *zap.Logger, db *sql.DB) *UserStore {
 	}
 }
 
+func (store *UserStore) InitDemoUser() {
+	id := "123"
+
+	demoUser := User{
+		Id:        &id,
+		FirstName: "Jack",
+		LastName:  "Ellis",
+	}
+
+	store.Insert(&demoUser)
+}
+
 // Get retrieves in this case a user from the db
 func (us *UserStore) Get(id string) (*User, error) {
-	query := fmt.Sprintf("SELECT id,username FROM users WHERE id='%s'", id)
+	query := fmt.Sprintf("SELECT id, first_name, last_name FROM users WHERE id='%s'", id)
 	row := us.db.QueryRow(query)
 
 	var user User
-	switch err := row.Scan(&user.UserId, &user.Username); err {
+	switch err := row.Scan(&user.Id, &user.FirstName, &user.LastName); err {
 	case sql.ErrNoRows:
 		return nil, nil
 	case nil:
@@ -58,15 +70,19 @@ func (us *UserStore) Get(id string) (*User, error) {
 
 // Insert adds a user to the db
 func (us *UserStore) Insert(user *User) (*User, error) {
-	id, _ := uuid.NewV7()
-	query := fmt.Sprintf("INSERT INTO users (id, username) VALUES ('%s','%s')", id, user.Username)
+	if user.Id == nil {
+		id, _ := uuid.NewV7()
+		idStr := id.String()
+		user.Id = &idStr
+	}
+
+	query := fmt.Sprintf("INSERT INTO users (id, first_name, last_name) VALUES ('%s','%s', '%s')", *user.Id, user.FirstName, user.LastName)
 
 	_, err := us.db.Query(query)
 	if err != nil {
 		return nil, err
 	}
 
-	user.UserId = id.String()
 	return user, err
 }
 
