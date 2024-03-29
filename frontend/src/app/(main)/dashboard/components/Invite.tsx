@@ -9,9 +9,9 @@ type Props = {
 
 async function Invite({ _key, invite }: Props) {
     let key = null
-    if (USER == invite.organiser) {
-        key = await InviteService.getOrganiserKey(invite.id, USER)
-    }
+
+    // Careful here!
+    key = await InviteService.getOrganiserKey(invite.id, USER)
 
     return (
         <div key={_key}>
