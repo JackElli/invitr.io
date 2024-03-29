@@ -13,7 +13,7 @@ const PeopleInvited = ({ invite }: Props) => {
                 {
                     invite.invitees.map((person, count) => {
                         return (
-                            <Person person={person} />
+                            <Person person={person} invite={invite} />
                         )
                     })
                 }

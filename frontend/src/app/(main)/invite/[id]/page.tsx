@@ -40,6 +40,9 @@ export default async function InvitePage({ params, searchParams }: { params: { i
         // event IS owned by the user that's logged in
         return (
             <div>
+                <div className="flex justify-center items-center rounded-b-lg w-full h-10 bg-gradient-to-r from-[#e1f9fc] to-white border border-gray-200 -mt-10 mb-4">
+                    <h1 className="text-xl text-center font-bold">This is your event!</h1>
+                </div>
                 <div>
                     <div className="flex justify-between items-center">
                         <InviteOverview invite={invite} />
