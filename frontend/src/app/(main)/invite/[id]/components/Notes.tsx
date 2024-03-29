@@ -35,7 +35,6 @@ const Notes = ({ invite, editable = false }: Props) => {
                     <p className="text-xl bg-white p-4 rounded-md border border-gray-200" onDoubleClick={() => setEditing(true)}>{notes}</p>
                 }
             </div>
-
         </div>
     )
 }

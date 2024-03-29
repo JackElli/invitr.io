@@ -18,43 +18,29 @@ export default async function InvitePage({ params, searchParams }: { params: { i
             return <p>You are not allowed to be here :)</p>
         }
 
-        // event is NOT owned by the user that's logged in
+        const isOrganiser = invite.organiser == USER;
+
         // need to check if they've got the correct key
-        if (invite.organiser != USER) {
-            return (
-                <div>
-                    <div>
-                        <div className="flex justify-between items-center">
-                            <InviteOverview invite={invite} />
-                            <ChangeGoing invite={invite} searchParams={searchParams} />
-                        </div>
-                    </div>
-
-                    <PeopleInvited invite={invite} />
-
-                    <Notes invite={invite} />
-                </div>
-            )
-        }
-
-        // event IS owned by the user that's logged in
         return (
             <div>
-                <div className="flex justify-center items-center rounded-b-lg w-full h-10 bg-gradient-to-r from-[#e1f9fc] to-white border border-gray-200 -mt-10 mb-4">
-                    <h1 className="text-xl text-center font-bold">This is your event!</h1>
-                </div>
+                {isOrganiser &&
+                    <div className="flex justify-center items-center rounded-lg w-full h-10 bg-gradient-to-r from-[#e1f9fc] to-white border border-gray-200 -mt-7 mb-4 shadow-sm">
+                        <h1 className="text-xl text-center font-bold">This is your event.</h1>
+                    </div>}
                 <div>
                     <div className="flex justify-between items-center">
                         <InviteOverview invite={invite} />
-                        <DeleteButton disabled>Delete event</DeleteButton>
+                        {!isOrganiser && <ChangeGoing invite={invite} searchParams={searchParams} />}
+                        {isOrganiser && <DeleteButton disabled>Delete event</DeleteButton>}
                     </div>
                 </div>
 
                 <PeopleInvited invite={invite} />
 
-                <Notes invite={invite} editable />
+                <Notes invite={invite} editable={isOrganiser} />
             </div>
         )
+
     } catch (e: any) {
         return (
             <ErrorCard />
