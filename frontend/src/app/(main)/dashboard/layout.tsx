@@ -16,7 +16,7 @@ export default async function DashboardLayout({ children }: Readonly<{ children:
                         </div>
 
                         <a href='/invite' className="inline-block">
-                            <Button className="bg-green-100 min-w-32">Create invite</Button>
+                            <Button className="bg-blue-500 text-white">Create invite</Button>
                         </a>
                     </div>
                 </div>
