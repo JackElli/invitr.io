@@ -1,7 +1,9 @@
 import Button from "@/app/lib/components/Button";
 import UserService from "@/app/lib/services/UserService";
 import ErrorCard from "@/app/lib/components/ErrorCard";
-import { USER } from "../layout";
+import { USER } from "@/app/page";
+import { Err } from "@/app/lib/services/Err";
+
 
 export default async function DashboardLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
     try {

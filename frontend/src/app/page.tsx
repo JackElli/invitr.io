@@ -1,9 +1,11 @@
 import { redirect } from "next/navigation";
 
+export let USER = "";
+
 export default function Main() {
-    const loggedIn = true;
+    const loggedIn = USER != "";
     if (!loggedIn) {
-        redirect('/login')
+        redirect('/home')
     }
     redirect('/dashboard')
 }

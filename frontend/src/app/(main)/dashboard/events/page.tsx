@@ -1,8 +1,7 @@
 import InviteService from "@/app/lib/services/InviteService";
-
 import ErrorCard from "@/app/lib/components/ErrorCard";
 import Events from "./Events";
-import { USER } from "../../layout";
+import { USER } from "@/app/page";
 
 export default async function EventsPage() {
     try {
