@@ -41,10 +41,8 @@ func NewUserStore(logger *zap.Logger, db *sql.DB) *UserStore {
 }
 
 func (store *UserStore) InitDemoUser() {
-	id := "123"
-
 	demoUser := User{
-		Id:        &id,
+		Id:        "123",
 		FirstName: "Jack",
 		LastName:  "Ellis",
 	}
@@ -70,13 +68,10 @@ func (us *UserStore) Get(id string) (*User, error) {
 
 // Insert adds a user to the db
 func (us *UserStore) Insert(user *User) (*User, error) {
-	if user.Id == nil {
-		id, _ := uuid.NewV7()
-		idStr := id.String()
-		user.Id = &idStr
-	}
+	id, _ := uuid.NewV7()
+	user.Id = id.String()
 
-	query := fmt.Sprintf("INSERT INTO users (id, first_name, last_name) VALUES ('%s','%s', '%s')", *user.Id, user.FirstName, user.LastName)
+	query := fmt.Sprintf("INSERT INTO users (id, first_name, last_name) VALUES ('%s','%s', '%s')", user.Id, user.FirstName, user.LastName)
 
 	_, err := us.db.Query(query)
 	if err != nil {
