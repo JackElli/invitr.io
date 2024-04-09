@@ -1,4 +1,4 @@
-import { USER } from "@/app/(main)/layout";
+import { USER } from "@/app/page";
 import NetworkService from "./NetworkService";
 
 export type Person = {
