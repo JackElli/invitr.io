@@ -1,4 +1,6 @@
 import { redirect } from "next/navigation";
+import { Err } from "./Err";
+
 
 class NetworkService {
     async get(url: string, tag?: string): Promise<any> {
@@ -24,7 +26,8 @@ class NetworkService {
             if (response.status == 401) {
                 throw redirect('/login');
             }
-            throw new Error('Oops, something wrong has happened.');
+
+            throw new Err('Oops, something wrong has happened.', response.status);
         }
 
         return await response.json();
