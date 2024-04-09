@@ -9,7 +9,7 @@ export default async function EventsPage() {
         const invites = await InviteService.getByUser(USER);
 
         if (!invites.finished && !invites.ongoing) {
-            return <p>No invites found</p>
+            return <p>No events found</p>
         }
 
         return (

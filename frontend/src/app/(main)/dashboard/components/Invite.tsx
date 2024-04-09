@@ -8,10 +8,8 @@ type Props = {
 }
 
 async function Invite({ _key, invite }: Props) {
-    let key = null
-
     // Careful here!
-    key = await InviteService.getOrganiserKey(invite.id, USER)
+    const key = await InviteService.getOrganiserKey(invite.id, USER);
 
     return (
         <div key={_key}>

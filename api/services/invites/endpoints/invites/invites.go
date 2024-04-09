@@ -31,15 +31,17 @@ type InviteMgr struct {
 	Router      *mux.Router
 	Responder   responder.Responder
 	InviteStore invitestore.InviteStorer
+	QRMgr       invites_pkg.IQRMgr
 }
 
-func NewInviteMgr(router *mux.Router, environment string, logger *zap.Logger, responder responder.Responder, invitestore invitestore.InviteStorer) *InviteMgr {
+func NewInviteMgr(router *mux.Router, environment string, logger *zap.Logger, responder responder.Responder, invitestore invitestore.InviteStorer, qrmgr invites_pkg.IQRMgr) *InviteMgr {
 	e := &InviteMgr{
 		Env:         environment,
 		Logger:      logger,
 		Router:      router,
 		Responder:   responder,
 		InviteStore: invitestore,
+		QRMgr:       qrmgr,
 	}
 	e.Register()
 	return e
@@ -69,7 +71,7 @@ func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request)
 
 		// we need to generate a QR code, for this we need to
 		// call the QR code microservice
-		qrcode, err := invites_pkg.GenerateQRCode()
+		qrcode, err := mgr.QRMgr.GenerateQRCode()
 		if err != nil {
 			mgr.Responder.Error(w, 500, err)
 			return
@@ -77,7 +79,7 @@ func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request)
 
 		// we could possibly send it as a byte array
 		// but we'll need to unmarshal it properly
-		qrcodeBytes := invites_pkg.QrToBytes(*qrcode)
+		qrcodeBytes := mgr.QRMgr.QrToBytes(*qrcode)
 		getinvite.QRCode = string(qrcodeBytes)
 		invite, err := mgr.InviteStore.Insert(&getinvite)
 		if err != nil {
@@ -115,6 +117,8 @@ func (mgr *InviteMgr) AddNotes() func(w http.ResponseWriter, req *http.Request) 
 		var getnote InviteNote
 		json.NewDecoder(req.Body).Decode(&getnote)
 
+		// TODO add check to see if note is valid
+
 		err := mgr.InviteStore.Update("invites", inviteId, "notes", getnote.Notes)
 		if err != nil {
 			mgr.Responder.Error(w, 400, err)
@@ -137,13 +141,13 @@ func (mgr *InviteMgr) GetInvite() func(w http.ResponseWriter, req *http.Request)
 		}
 
 		if invite == nil {
-			mgr.Responder.Respond(w, http.StatusOK, nil)
+			mgr.Responder.Error(w, 404, errors.New("invite not found"))
 			return
 		}
 
 		// need to change bytes to QR from db and then
 		// return in the JSON format
-		qrcode := invites_pkg.BytesToQR([]byte(invite.QRCode))
+		qrcode := mgr.QRMgr.BytesToQR([]byte(invite.QRCode))
 		inviteJSON := invitestore.InviteJSON{
 			Invite: invitestore.Invite{
 				Id:         invite.Id,
@@ -177,7 +181,7 @@ func (mgr *InviteMgr) ListInvitesByUser() func(w http.ResponseWriter, req *http.
 
 		for _, invite := range invites {
 			// need to change bytes to QR from db and then
-			qrcode := invites_pkg.BytesToQR([]byte(invite.QRCode))
+			qrcode := mgr.QRMgr.BytesToQR([]byte(invite.QRCode))
 			// return in the JSON format
 			inviteJSON := invitestore.InviteJSON{
 				Invite: invitestore.Invite{

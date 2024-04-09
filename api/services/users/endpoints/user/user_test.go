@@ -28,23 +28,17 @@ func TestNewUser(t *testing.T) {
 	loggerMock, _ := zap.NewProduction()
 	defer loggerMock.Sync()
 
-	mockId := "1234"
-
 	newUser := userstore.User{
-		Id:        &mockId,
+		Id:        "1234",
 		FirstName: "Jack",
 		LastName:  "Ellis",
 	}
 
 	testcases := []testcase{
 		{
-			desc: "HAPPY added user correctly",
-			expectedResponse: userstore.User{
-				Id:        &mockId,
-				FirstName: "Jack",
-				LastName:  "Ellis",
-			},
-			expectedStatus: 201,
+			desc:             "HAPPY added user correctly",
+			expectedResponse: newUser,
+			expectedStatus:   201,
 		},
 	}
 

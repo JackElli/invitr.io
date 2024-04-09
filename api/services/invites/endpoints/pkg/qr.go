@@ -9,8 +9,20 @@ import (
 
 const QR_CODE_URL = "http://qr-codes:3201/qr-code"
 
+type IQRMgr interface {
+	GenerateQRCode() (*qrcodes.QRCode, error)
+	BytesToQR(b []byte) qrcodes.QRCode
+	QrToBytes(qr qrcodes.QRCode) []byte
+}
+
+type QRMgr struct{}
+
+func NewQRMgr() *QRMgr {
+	return &QRMgr{}
+}
+
 // GenerateQRCode fetches a QR code from the QR code microservice
-func GenerateQRCode() (*qrcodes.QRCode, error) {
+func (mgr *QRMgr) GenerateQRCode() (*qrcodes.QRCode, error) {
 	resp, err := http.Get(QR_CODE_URL)
 	if err != nil {
 		return nil, err
@@ -25,7 +37,7 @@ func GenerateQRCode() (*qrcodes.QRCode, error) {
 
 // bytesToQR returns a QR code type based on the bytes
 // provided
-func BytesToQR(b []byte) qrcodes.QRCode {
+func (mgr *QRMgr) BytesToQR(b []byte) qrcodes.QRCode {
 	var qrcode qrcodes.QRCode
 	json.Unmarshal(b, &qrcode)
 
@@ -34,7 +46,7 @@ func BytesToQR(b []byte) qrcodes.QRCode {
 
 // qrToBytes returns a byte array based on QR code type
 // given
-func QrToBytes(qr qrcodes.QRCode) []byte {
+func (mgr *QRMgr) QrToBytes(qr qrcodes.QRCode) []byte {
 	qrcodeBytes, _ := json.Marshal(qr)
 	return qrcodeBytes
 }
