@@ -3,7 +3,6 @@ package orgstore
 import (
 	"database/sql"
 	"encoding/json"
-	"fmt"
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
@@ -13,7 +12,7 @@ type OrgStorer interface {
 	Get(id string) (*Organisation, error)
 	Insert(invite *Organisation) (*Organisation, error)
 	Update(table string, orgId string, fieldName string, fieldValue string) error
-	Query(querystr string) (*sql.Rows, error)
+	Query(querystr string, args ...any) (*sql.Rows, error)
 	// Remove(userId string) error
 }
 
@@ -69,8 +68,7 @@ func (store *OrgStore) Get(id string) (*Organisation, error) {
 	// we then need to aggregate the invitees into a json list. Once we have the
 	// query response, the invitees will be in bytes so we need to json unmarshal
 	// to turn it into a string list.
-	query := fmt.Sprintf("SELECT o.id, o.name, IF(op.user IS NOT NULL, JSON_ARRAYAGG(op.user), NULL) as people FROM organisations o LEFT JOIN organisation_people op ON op.organisation_id=o.id WHERE o.id='%s'", id)
-	row := store.db.QueryRow(query)
+	row := store.db.QueryRow("SELECT o.id, o.name, IF(op.user IS NOT NULL, JSON_ARRAYAGG(op.user), NULL) as people FROM organisations o LEFT JOIN organisation_people op ON op.organisation_id=o.id WHERE o.id = ?", id)
 
 	var org Organisation
 	var people []byte
@@ -91,9 +89,7 @@ func (store *OrgStore) Insert(org *Organisation) (*Organisation, error) {
 
 	// TODO for the QR code, can we use a byte array instead of JSON string
 	// we will probably need to use %v for the format.
-	query := fmt.Sprintf("INSERT INTO organisations (id, name) VALUES ('%s','%s')", id, org.Name)
-
-	_, err := store.db.Query(query)
+	_, err := store.db.Query("INSERT INTO organisations (id, name) VALUES (?, ?)", id, org.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -101,8 +97,7 @@ func (store *OrgStore) Insert(org *Organisation) (*Organisation, error) {
 	// need to add the people to the pivot table
 	for _, userId := range org.People {
 		orgPeopleId, _ := uuid.NewV7()
-		query := fmt.Sprintf("INSERT INTO organisation_people (id, organisation_id, user) VALUES ('%s', '%s', '%s')", &orgPeopleId, id, userId)
-		_, err := store.db.Query(query)
+		_, err := store.db.Query("INSERT INTO organisation_people (id, organisation_id, user) VALUES (?, ?, ?)", &orgPeopleId, id, userId)
 		if err != nil {
 			return nil, err
 		}
@@ -115,15 +110,13 @@ func (store *OrgStore) Insert(org *Organisation) (*Organisation, error) {
 // Update updates a field within the invites table
 // TODO make this work with other data types
 func (store *OrgStore) Update(table string, inviteId string, fieldName string, fieldValue string) error {
-	query := fmt.Sprintf("UPDATE %s SET %s='%s' WHERE id='%s'", table, fieldName, fieldValue, inviteId)
-
-	_, err := store.db.Query(query)
+	_, err := store.db.Query("UPDATE ? SET ? = ? WHERE id = ?", table, fieldName, fieldValue, inviteId)
 
 	return err
 }
 
 // Query runs a custom query on the DB (need to be careful here :) )
-func (store *OrgStore) Query(query string) (*sql.Rows, error) {
-	rows, err := store.db.Query(query)
+func (store *OrgStore) Query(querystr string, args ...any) (*sql.Rows, error) {
+	rows, err := store.db.Query(querystr, args)
 	return rows, err
 }
