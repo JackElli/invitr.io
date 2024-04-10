@@ -67,7 +67,7 @@ func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request)
 			err := errors.New("no-one was invited, you need to invite someone")
 
 			mgr.Logger.Error(err.Error())
-			mgr.Responder.Error(w, 401, err)
+			mgr.Responder.Error(w, 400, err)
 
 			return
 		}
