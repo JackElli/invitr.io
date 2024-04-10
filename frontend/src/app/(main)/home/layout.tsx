@@ -1,3 +1,4 @@
+import ActionButton from "@/app/lib/components/ActionButton";
 import Button from "@/app/lib/components/Button";
 
 export default function HomeLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
@@ -15,7 +16,7 @@ export default function HomeLayout({ children }: Readonly<{ children: React.Reac
                         </a>
 
                         <a href='/login' className="inline-block">
-                            <Button className="bg-blue-500 text-white">Log in</Button>
+                            <ActionButton>Log in</ActionButton>
                         </a>
                     </div>
 
