@@ -1,4 +1,4 @@
-import Button from "@/app/lib/components/Button";
+import ActionButton from "@/app/lib/components/ActionButton";
 
 export default async function HomePage() {
     return (
@@ -20,7 +20,7 @@ export default async function HomePage() {
             <p className="text-lg">Talk to us at <span className="font-medium">test@test.com!</span></p>
 
             <a href='/login' className="inline-block mt-4">
-                <Button className="bg-blue-500 text-white">Talk to us</Button>
+                <ActionButton className="bg-blue-500 text-white">Talk to us</ActionButton>
             </a>
         </>
 
