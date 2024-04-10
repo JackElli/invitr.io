@@ -47,6 +47,6 @@ func (store *InviteStoreMock) Update(table string, inviteId string, fieldName st
 	return nil
 }
 
-func (store *InviteStoreMock) Query(querystr string) (*sql.Rows, error) {
+func (store *InviteStoreMock) Query(querystr string, args ...any) (*sql.Rows, error) {
 	return nil, nil
 }

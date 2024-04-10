@@ -41,6 +41,7 @@ func (mgr *UserMgr) GetUser() func(w http.ResponseWriter, req *http.Request) {
 
 		user, err := mgr.UserStore.Get(userId)
 		if err != nil {
+			mgr.Logger.Error(err.Error())
 			mgr.Responder.Error(w, 400, err)
 			return
 		}

@@ -1,4 +1,5 @@
 'use client'
+import ActionButton from "@/app/lib/components/ActionButton";
 import Button from "@/app/lib/components/Button";
 import Textbox from "@/app/lib/components/Textbox";
 import { useRouter } from "next/navigation";
@@ -35,9 +36,7 @@ export default function JoinPage() {
                 <Textbox name='key' className="w-96" onChange={(e) => setKey(e.target.value)}>Key</Textbox>
             </div>
 
-            <Button className="mt-4" onClick={join}>Join event</Button>
-
-
+            <ActionButton className="mt-4" onClick={join}>Join event</ActionButton>
         </>
     )
 }

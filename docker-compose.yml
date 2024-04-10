@@ -25,31 +25,6 @@ services:
     volumes:
       - mariadb_data-users:/var/lib/mysql
 
-  organisations:
-    image: organisations
-    container_name: organisations
-    restart: always
-    build:
-      context: ./api
-      dockerfile: ../deployment/docker/services/organisations/Dockerfile
-    env_file:
-      - ./.env
-    depends_on:
-      - db-organisations
-    ports:
-      - "3203:3203"
-
-  db-organisations:
-    image: mariadb:11
-    restart: unless-stopped
-    environment:
-      MARIADB_USER: &dbuser todo
-      MARIADB_PASSWORD: &dbpass todosecret
-      MARIADB_ROOT_PASSWORD: iamroot
-      MARIADB_DATABASE: &dbname organisations
-    volumes:
-      - mariadb_data-organisations:/var/lib/mysql
-
   qr-codes:
     image: qr-codes
     container_name: qr-codes
@@ -96,7 +71,8 @@ services:
 
     volumes:
       - ./frontend/:/app/
-      - /src/app/node_modules
+      - /app/node_modules
+      - /app/.next
 
   adminer:
     image: adminer:4-standalone
@@ -106,6 +82,5 @@ services:
 volumes:
   mariadb_data-users:
   mariadb_data-invites:
-  mariadb_data-organisations:
 
 
