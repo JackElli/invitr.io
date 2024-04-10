@@ -1,7 +1,7 @@
-import Button from "@/app/lib/components/Button";
 import UserService from "@/app/lib/services/UserService";
 import ErrorCard from "@/app/lib/components/ErrorCard";
 import { USER } from "../layout";
+import ActionButton from "@/app/lib/components/ActionButton";
 
 export default async function DashboardLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
     try {
@@ -16,7 +16,7 @@ export default async function DashboardLayout({ children }: Readonly<{ children:
                         </div>
 
                         <a href='/invite' className="inline-block">
-                            <Button className="bg-blue-500 text-white">Create invite</Button>
+                            <ActionButton>Create invite</ActionButton>
                         </a>
                     </div>
                 </div>

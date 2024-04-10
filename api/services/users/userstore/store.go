@@ -68,8 +68,12 @@ func (us *UserStore) Get(id string) (*User, error) {
 
 // Insert adds a user to the db
 func (us *UserStore) Insert(user *User) (*User, error) {
-	id, _ := uuid.NewV7()
-	user.Id = id.String()
+	// if it's not a demo user, we need to generate
+	// and ID
+	if user.Id == "" {
+		id, _ := uuid.NewV7()
+		user.Id = id.String()
+	}
 
 	query := fmt.Sprintf("INSERT INTO users (id, first_name, last_name) VALUES ('%s','%s', '%s')", user.Id, user.FirstName, user.LastName)
 

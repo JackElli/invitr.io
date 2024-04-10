@@ -1,7 +1,9 @@
 'use client'
 
+import ActionButton from "@/app/lib/components/ActionButton";
 import Button from "@/app/lib/components/Button";
 import Textbox from "@/app/lib/components/Textbox";
+import UnderConstruction from "@/app/lib/components/UnderConstruction";
 import InviteService from "@/app/lib/services/InviteService";
 import { useRouter } from "next/navigation";
 
@@ -39,8 +41,10 @@ export default function NewInvitePage() {
         setInputs(values => ({ ...values, [name]: value }));
     }
 
+    const notValid = inputs.title == "" || inputs.location == "" || inputs.date == "" || inputs.passphrase == "" || inputs.people == ""
+
     const createEvent = () => {
-        if (inputs.title == "" || inputs.location == "" || inputs.date == "" || inputs.passphrase == "" || inputs.people == "") {
+        if (notValid) {
             return;
         }
 
@@ -61,6 +65,7 @@ export default function NewInvitePage() {
 
     return (
         <>
+            <UnderConstruction />
             <h1 className='text-3xl font-bold'>Create an invite</h1>
             <p className="text-sm">Fill in the details to start.</p>
             <div className="flex gap-32 items-center">
@@ -74,7 +79,7 @@ export default function NewInvitePage() {
                         </div>
 
                         <div className="mt-4">
-                            <Textbox name="date" value={inputs.date} onChange={dataOnChange}>Date</Textbox>
+                            <Textbox name="date" value={inputs.date} onChange={dataOnChange}>Date (YYYY-mm-dd)</Textbox>
                         </div>
 
                         <div className="mt-4">
@@ -82,7 +87,7 @@ export default function NewInvitePage() {
                         </div>
 
                     </div>
-                    <Button className="mt-4" onClick={createEvent}>Create invite</Button>
+                    <ActionButton className="mt-2" onClick={createEvent} disabled={notValid}>Create invite</ActionButton>
                 </div>
 
                 <div>
