@@ -29,11 +29,12 @@ The idea is to create a nice UI which organisers can log in to and create events
         "invitees": [{"name":"testuser"}]
         }
     ```
-4) To then see the invite send a GET request to 
+5) To then see the invite send a GET request to 
     ```
     http://localhost:3202/invites/invite/{ID}
     ``` 
     where the ID is the ID in the response from the previous request.
+6) Or, go to `localhost:3000` to view it in the UI
 
 ## Future work
 
@@ -41,3 +42,4 @@ The idea is to create a nice UI which organisers can log in to and create events
 - Add Google / Apple log in ability
 - All calender integration so meetings / events can be added quickly to a users calender (we should also be able to accept / reject from the calender)
 - We should have a meeting summary where the organiser can write notes / add images to the webpage and the invitees can access (with the passphrase) and see the highlights of the meeting. It should be very easy to remove if the organiser should choose to delete it.
+

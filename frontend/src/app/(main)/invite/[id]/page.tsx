@@ -22,11 +22,7 @@ export default async function InvitePage({ params, searchParams }: { params: { i
 
         // need to check if they've got the correct key
         return (
-            <div>
-                {isOrganiser &&
-                    <div className="flex justify-center items-center rounded-lg w-full h-10 bg-gradient-to-r from-[#e1f9fc] to-white border border-gray-200 -mt-7 mb-4 shadow-sm">
-                        <h1 className="text-xl text-center font-bold">This is your event.</h1>
-                    </div>}
+            <>
                 <div>
                     <div className="flex justify-between items-center">
                         <InviteOverview invite={invite} />
@@ -38,7 +34,7 @@ export default async function InvitePage({ params, searchParams }: { params: { i
                 <PeopleInvited invite={invite} />
 
                 <Notes invite={invite} editable={isOrganiser} />
-            </div>
+            </>
         )
 
     } catch (e: any) {

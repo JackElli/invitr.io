@@ -19,7 +19,7 @@ async function Invite({ _key, invite }: Props) {
                         <div className="flex gap-2 items-center">
                             <h1 className="font-bold text-lg">{invite.title}</h1>
                             {invite.organiser == USER &&
-                                <div className='h-3 w-3 bg-yellow-300 rounded-sm' title="You are the organiser of this event"></div>}
+                                <div className='h-3 w-3 bg-gradient-to-r from-[#cff3f8] to-gray-200 border border-gray-400 rounded-sm' title="You are the organiser of this event"></div>}
                         </div>
 
                         <p><span className="font-bold">{getDate(invite.date)}</span> @ {invite.location}</p>
