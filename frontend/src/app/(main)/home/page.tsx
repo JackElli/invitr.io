@@ -7,7 +7,7 @@ export default async function HomePage() {
             <p className="text-lg">invitr.io is an application allowing you to create and send invites easily in either email or physical form.</p>
 
             <h1 className="text-xl font-semibold mt-8">Why invitr.io?</h1>
-            <p className="text-lg">Easy to use UI, easy calandar integration, no need to log in to respond to invites.</p>
+            <p className="text-lg">Easy to use UI, easy calendar integration, no need to log in to respond to invites.</p>
 
             <ul className="list-disc mt-8 text-xl list-inside">
                 <li>Free if you're responding to invites</li>

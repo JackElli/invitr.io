@@ -10,10 +10,9 @@ const Header = () => {
                     <a href='/join'>
                         <p className="text-sm text-gray-700 hover:underline cursor-pointer">Join event</p>
                     </a>
-                    <p className="text-sm text-gray-700 hover:underline cursor-pointer">About</p>
+
+                    <p className="text-sm text-gray-400">About</p>
                 </div>
-
-
             </div>
         </div>
     )
