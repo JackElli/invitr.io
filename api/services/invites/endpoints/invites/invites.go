@@ -3,7 +3,6 @@ package invites
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -65,7 +64,11 @@ func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request)
 
 		// check if the user has invited people
 		if len(getinvite.Invitees) == 0 {
-			mgr.Responder.Error(w, 401, errors.New("no-one was invited, you need to invite someone"))
+			err := errors.New("no-one was invited, you need to invite someone")
+
+			mgr.Logger.Error(err.Error())
+			mgr.Responder.Error(w, 400, err)
+
 			return
 		}
 
@@ -73,6 +76,7 @@ func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request)
 		// call the QR code microservice
 		qrcode, err := mgr.QRMgr.GenerateQRCode()
 		if err != nil {
+			mgr.Logger.Error(err.Error())
 			mgr.Responder.Error(w, 500, err)
 			return
 		}
@@ -83,6 +87,7 @@ func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request)
 		getinvite.QRCode = string(qrcodeBytes)
 		invite, err := mgr.InviteStore.Insert(&getinvite)
 		if err != nil {
+			mgr.Logger.Error(err.Error())
 			mgr.Responder.Error(w, 400, err)
 			return
 		}
@@ -118,9 +123,10 @@ func (mgr *InviteMgr) AddNotes() func(w http.ResponseWriter, req *http.Request) 
 		json.NewDecoder(req.Body).Decode(&getnote)
 
 		// TODO add check to see if note is valid
-
+		// TODO have a think if this needs to be this generic?
 		err := mgr.InviteStore.Update("invites", inviteId, "notes", getnote.Notes)
 		if err != nil {
+			mgr.Logger.Error(err.Error())
 			mgr.Responder.Error(w, 400, err)
 			return
 		}
@@ -136,6 +142,7 @@ func (mgr *InviteMgr) GetInvite() func(w http.ResponseWriter, req *http.Request)
 
 		invite, err := mgr.InviteStore.Get(inviteId)
 		if err != nil {
+			mgr.Logger.Error(err.Error())
 			mgr.Responder.Error(w, 400, err)
 			return
 		}
@@ -173,6 +180,7 @@ func (mgr *InviteMgr) ListInvitesByUser() func(w http.ResponseWriter, req *http.
 
 		invites, err := mgr.InviteStore.ListByUser(userId)
 		if err != nil {
+			mgr.Logger.Error(err.Error())
 			mgr.Responder.Error(w, 400, err)
 			return
 		}
@@ -217,10 +225,10 @@ func (mgr *InviteMgr) IsUserGoingToEvent() func(w http.ResponseWriter, req *http
 
 		// TODO could we make the table names const?
 		rows, err := mgr.InviteStore.Query(
-			fmt.Sprintf("SELECT is_going FROM invites_invitees WHERE invite_id='%s' AND invitee='%s'",
-				inviteId, user),
-		)
+			"SELECT is_going FROM invites_invitees WHERE invite_id = ? AND invitee = ?",
+			inviteId, user)
 		if err != nil {
+			mgr.Logger.Error(err.Error())
 			mgr.Responder.Error(w, 400, err)
 			return
 		}
@@ -255,10 +263,11 @@ func (mgr *InviteMgr) RespondToEvent() func(w http.ResponseWriter, req *http.Req
 
 		// TODO could we make the table names const?
 		_, err := mgr.InviteStore.Query(
-			fmt.Sprintf("UPDATE invites_invitees SET is_going='%d' WHERE invite_id='%s' AND invitee='%s'",
-				going, inviteId, user),
+			"UPDATE invites_invitees SET is_going = ?  WHERE invite_id = ? AND invitee = ?",
+			going, inviteId, user,
 		)
 		if err != nil {
+			mgr.Logger.Error(err.Error())
 			mgr.Responder.Error(w, 400, err)
 			return
 		}
@@ -280,10 +289,11 @@ func (mgr *InviteMgr) GetUserFromKey() func(w http.ResponseWriter, req *http.Req
 		json.NewDecoder(req.Body).Decode(&userkey)
 
 		rows, err := mgr.InviteStore.Query(
-			fmt.Sprintf("SELECT invitee FROM invites_invitees WHERE invite_id='%s' AND invite_key='%s'",
-				inviteId, userkey.Key),
+			"SELECT invitee FROM invites_invitees WHERE invite_id = ? AND invite_key = ?",
+			inviteId, userkey.Key,
 		)
 		if err != nil {
+			mgr.Logger.Error(err.Error())
 			mgr.Responder.Error(w, 400, err)
 			return
 		}
@@ -306,15 +316,16 @@ func (mgr *InviteMgr) GetOrganiserKey() func(w http.ResponseWriter, req *http.Re
 		user := mux.Vars(req)["user"]
 
 		rows, err := mgr.InviteStore.Query(
-			fmt.Sprintf("SELECT invite_key FROM invites_invitees WHERE invite_id='%s' AND invitee='%s'",
-				inviteId, user),
+			"SELECT invite_key FROM invites_invitees WHERE invite_id = ? AND invitee = ?",
+			inviteId, user,
 		)
 		if err != nil {
+			mgr.Logger.Error(err.Error())
 			mgr.Responder.Error(w, 400, err)
 			return
 		}
 
-		var key *string
+		var key string
 		for rows.Next() {
 			rows.Scan(&key)
 		}

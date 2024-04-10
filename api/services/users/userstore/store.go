@@ -2,7 +2,6 @@ package userstore
 
 import (
 	"database/sql"
-	"fmt"
 
 	"github.com/google/uuid"
 	"go.uber.org/zap"
@@ -14,8 +13,7 @@ type UserStorer interface {
 	Remove(userId string) error
 
 	// Add these in later (not needed for now)
-	// Query(querystr string, options *gocb.QueryOptions) ([]Grumble, error)
-	// Update(id string, grumble *Grumble) error
+	// Query(querystr string, args ...any) (*sql.Rows, error)
 }
 
 type UserStore struct {
@@ -52,8 +50,7 @@ func (store *UserStore) InitDemoUser() {
 
 // Get retrieves in this case a user from the db
 func (us *UserStore) Get(id string) (*User, error) {
-	query := fmt.Sprintf("SELECT id, first_name, last_name FROM users WHERE id='%s'", id)
-	row := us.db.QueryRow(query)
+	row := us.db.QueryRow("SELECT id, first_name, last_name FROM users WHERE id = ?", id)
 
 	var user User
 	switch err := row.Scan(&user.Id, &user.FirstName, &user.LastName); err {
@@ -75,9 +72,7 @@ func (us *UserStore) Insert(user *User) (*User, error) {
 		user.Id = id.String()
 	}
 
-	query := fmt.Sprintf("INSERT INTO users (id, first_name, last_name) VALUES ('%s','%s', '%s')", user.Id, user.FirstName, user.LastName)
-
-	_, err := us.db.Query(query)
+	_, err := us.db.Query("INSERT INTO users (id, first_name, last_name) VALUES (?, ?, ?)", user.Id, user.FirstName, user.LastName)
 	if err != nil {
 		return nil, err
 	}
@@ -87,9 +82,7 @@ func (us *UserStore) Insert(user *User) (*User, error) {
 
 // Remove removes a user from the db
 func (us *UserStore) Remove(userId string) error {
-	query := fmt.Sprintf("DELETE FROM users WHERE id='%s'", userId)
-
-	_, err := us.db.Query(query)
+	_, err := us.db.Query("DELETE FROM users WHERE id = ?", userId)
 
 	return err
 }
