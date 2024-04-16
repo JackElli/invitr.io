@@ -41,8 +41,8 @@ func NewUserStore(logger *zap.Logger, db *sql.DB) *UserStore {
 func (store *UserStore) InitDemoUser() {
 	demoUser := User{
 		Id:        "123",
-		FirstName: "Jack",
-		LastName:  "Ellis",
+		FirstName: "Demo",
+		LastName:  "User",
 	}
 
 	store.Insert(&demoUser)
