@@ -1,8 +1,8 @@
 import UserService from "@/app/lib/services/UserService";
 import ErrorCard from "@/app/lib/components/ErrorCard";
 import { USER } from "@/app/page";
+import ActionButton from "@/app/lib/components/ActionButton";
 import { Err } from "@/app/lib/services/Err";
-
 
 export default async function DashboardLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
     try {
@@ -33,9 +33,10 @@ export default async function DashboardLayout({ children }: Readonly<{ children:
             </>
         )
     } catch (e) {
+        const err = e as Err;
         return (
             <div className="w-3/4 mx-auto mt-2 flex justify-center items-center">
-                <ErrorCard />
+                <ErrorCard error={err.message} />
             </div>
         )
     }

@@ -21,11 +21,13 @@ async function Invite({ _key, invite }: Props) {
                             {invite.organiser == USER &&
                                 <div className='h-3 w-3 bg-gradient-to-r from-[#e1f9fc] to-gray-100 border border-gray-400 rounded-sm' title="You are the organiser of this event"></div>}
                         </div>
-
-                        <p><span className="font-bold">{getDate(invite.date)}</span> @ {invite.location}</p>
+                        <div className="flex gap-1 items-center mt-2">
+                            <p className="text-sm bg-gray-200 inline-block px-2 rounded-sm">{getDateRelative(invite.date)}</p>
+                            <p><span className="font-bold"> - {getDate(invite.date)}</span> @ {invite.location}</p>
+                        </div>
                     </div>
 
-                    <p className="text-sm bg-gray-200 inline-block px-2 rounded-sm">{getDateRelative(invite.date)}</p>
+                    <p className="text-gray-500"><span className="font-bold">?</span> going</p>
                 </div>
             </a>
         </div>

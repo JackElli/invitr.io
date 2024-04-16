@@ -27,7 +27,9 @@ class NetworkService {
                 throw redirect('/login');
             }
 
-            throw new Err('Oops, something wrong has happened.', response.status);
+            const message = await response.text();
+
+            throw new Err(message, response.status);
         }
 
         return await response.json();
