@@ -22,7 +22,7 @@ export default async function InvitePage({ params, searchParams }: { params: { i
 
         // need to check if they've got the correct key
         return (
-            <div>
+            <>
                 <div>
                     <div className="flex justify-between items-center">
                         <InviteOverview invite={invite} />
