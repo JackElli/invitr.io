@@ -1,5 +1,5 @@
-import { getDate, getDateRelative } from "@/app/lib/Date";
-import InviteService, { Invite } from "../../../lib/services/InviteService";
+import { getDate, getDateRelative } from "@/lib/Date";
+import InviteService, { Invite } from "../../../../lib/services/InviteService";
 import { USER } from "@/app/page";
 
 type Props = {

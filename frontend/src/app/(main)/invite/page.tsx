@@ -1,10 +1,10 @@
 'use client'
 
-import ActionButton from "@/app/lib/components/ActionButton";
-import Button from "@/app/lib/components/Button";
-import Textbox from "@/app/lib/components/Textbox";
-import UnderConstruction from "@/app/lib/components/UnderConstruction";
-import InviteService from "@/app/lib/services/InviteService";
+import ActionButton from "@/lib/components/ActionButton";
+import Button from "@/lib/components/Button";
+import Textbox from "@/lib/components/Textbox";
+import UnderConstruction from "@/lib/components/UnderConstruction";
+import InviteService from "@/lib/services/InviteService";
 import { useRouter } from "next/navigation";
 
 import { ChangeEvent, useEffect, useRef, useState } from "react"

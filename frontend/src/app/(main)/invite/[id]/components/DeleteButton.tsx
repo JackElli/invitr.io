@@ -1,4 +1,4 @@
-import Button from "@/app/lib/components/Button";
+import Button from "@/lib/components/Button";
 import { PropsWithChildren } from "react";
 
 interface Props extends PropsWithChildren {

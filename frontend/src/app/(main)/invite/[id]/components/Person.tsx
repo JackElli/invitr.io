@@ -1,6 +1,6 @@
-import { Invite, Person } from "@/app/lib/services/InviteService";
+import { Invite, Person } from "@/lib/services/InviteService";
 import IsGoing from "./IsGoing";
-import UserService, { User } from "@/app/lib/services/UserService";
+import UserService, { User } from "@/lib/services/UserService";
 
 type Props = {
     invite: Invite;

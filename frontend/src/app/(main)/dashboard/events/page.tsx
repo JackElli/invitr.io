@@ -1,5 +1,5 @@
-import InviteService from "@/app/lib/services/InviteService";
-import ErrorCard from "@/app/lib/components/ErrorCard";
+import InviteService from "@/lib/services/InviteService";
+import ErrorCard from "@/lib/components/ErrorCard";
 import Events from "./Events";
 import { USER } from "@/app/page";
 

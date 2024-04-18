@@ -1,4 +1,4 @@
-import Header from "../lib/components/Header";
+import Header from "../../lib/components/Header";
 import "../globals.css";
 
 export default function RootLayout({ children, }: Readonly<{ children: React.ReactNode; }>) {

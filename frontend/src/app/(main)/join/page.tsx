@@ -1,6 +1,6 @@
 'use client'
-import ActionButton from "@/app/lib/components/ActionButton";
-import Textbox from "@/app/lib/components/Textbox";
+import ActionButton from "@/lib/components/ActionButton";
+import Textbox from "@/lib/components/Textbox";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 

@@ -1,8 +1,8 @@
-import UserService from "@/app/lib/services/UserService";
-import ErrorCard from "@/app/lib/components/ErrorCard";
+import UserService from "@/lib/services/UserService";
+import ErrorCard from "@/lib/components/ErrorCard";
 import { USER } from "@/app/page";
-import ActionButton from "@/app/lib/components/ActionButton";
-import { Err } from "@/app/lib/services/Err";
+import ActionButton from "@/lib/components/ActionButton";
+import { Err } from "@/lib/services/Err";
 
 export default async function DashboardLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
     try {
@@ -23,8 +23,9 @@ export default async function DashboardLayout({ children }: Readonly<{ children:
                 </div>
 
                 <div className="w-3/4 mx-auto mt-8">
-                    <div className="flex gap-4">
+                    <div className="flex gap-6">
                         <h1 className={`text-xl font-bold border-b-2 pb-1 border-b-gray-600 `}>Your events</h1>
+                        <input className="px-2 outline-none" placeholder="Filter..." />
                     </div>
                     <div className="mt-4">
                         {children}

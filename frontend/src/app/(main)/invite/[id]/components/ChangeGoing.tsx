@@ -1,6 +1,6 @@
 'use server'
-import ErrorCard from "@/app/lib/components/ErrorCard";
-import InviteService, { Invite } from "@/app/lib/services/InviteService"
+import ErrorCard from "@/lib/components/ErrorCard";
+import InviteService, { Invite } from "@/lib/services/InviteService"
 import AcceptButton from "./AcceptButton";
 import RejectButton from "./RejectButton";
 import { revalidateTag } from "next/cache";
