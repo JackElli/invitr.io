@@ -11,7 +11,8 @@ import (
 	"go.uber.org/zap"
 	"gotest.tools/assert"
 	"invitr.io.com/responder"
-	invites_pkg "invitr.io.com/services/invites/endpoints/pkg"
+
+	invites_fetch "invitr.io.com/services/invites/fetch"
 	"invitr.io.com/services/invites/invitestore"
 	qrcodes "invitr.io.com/services/qr-codes/endpoints/qr-codes"
 )
@@ -26,7 +27,7 @@ func TestNewInvite(t *testing.T) {
 	responderMock := responder.NewResponder()
 	invitestoreMock := invitestore.NewInviteStoreMock()
 	loggerMock, _ := zap.NewProduction()
-	qrMgrMock := invites_pkg.NewQRMgrMock()
+	qrMgrMock := invites_fetch.NewQRMgrMock()
 	defer loggerMock.Sync()
 
 	var _notGoing int8 = 0
@@ -93,7 +94,7 @@ func TestGetInvite(t *testing.T) {
 	responderMock := responder.NewResponder()
 	invitestoreMock := invitestore.NewInviteStoreMock()
 	loggerMock, _ := zap.NewProduction()
-	qrMgrMock := invites_pkg.NewQRMgrMock()
+	qrMgrMock := invites_fetch.NewQRMgrMock()
 	defer loggerMock.Sync()
 
 	testcases := []testcase{

@@ -1,4 +1,4 @@
-package invites_pkg
+package invites_fetch
 
 import (
 	"encoding/json"
@@ -35,7 +35,7 @@ func (mgr *QRMgr) GenerateQRCode() (*qrcodes.QRCode, error) {
 	return &qrCode, nil
 }
 
-// bytesToQR returns a QR code type based on the bytes
+// BytesToQR returns a QR code type based on the bytes
 // provided
 func (mgr *QRMgr) BytesToQR(b []byte) qrcodes.QRCode {
 	var qrcode qrcodes.QRCode
@@ -44,7 +44,7 @@ func (mgr *QRMgr) BytesToQR(b []byte) qrcodes.QRCode {
 	return qrcode
 }
 
-// qrToBytes returns a byte array based on QR code type
+// QrToBytes returns a byte array based on QR code type
 // given
 func (mgr *QRMgr) QrToBytes(qr qrcodes.QRCode) []byte {
 	qrcodeBytes, _ := json.Marshal(qr)
