@@ -10,7 +10,7 @@ import (
 	"go.uber.org/zap"
 	"invitr.io.com/responder"
 	"invitr.io.com/services/invites/endpoints/invites"
-	invites_pkg "invitr.io.com/services/invites/endpoints/pkg"
+	invites_fetch "invitr.io.com/services/invites/fetch"
 	"invitr.io.com/services/invites/invitestore"
 )
 
@@ -53,7 +53,7 @@ func (e *Endpoints) SetupEndpoints(env string, r *mux.Router) error {
 	inviteStore := invitestore.NewInviteStore(e.Logger, db)
 
 	//set up QR manager
-	qrMgr := invites_pkg.NewQRMgr()
+	qrMgr := invites_fetch.NewQRMgr()
 
 	// add endpoints to the router
 	_ = invites.NewInviteMgr(public, env, e.Logger, responder, inviteStore, qrMgr)

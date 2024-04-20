@@ -1,5 +1,5 @@
-import ActionButton from "@/app/lib/components/ActionButton";
-import Button from "@/app/lib/components/Button";
+import ActionButton from "@/lib/components/ActionButton";
+import Button from "@/lib/components/Button";
 
 export default function HomeLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
     return (

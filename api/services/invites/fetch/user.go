@@ -1,4 +1,4 @@
-package invites_pkg
+package invites_fetch
 
 import (
 	"encoding/json"

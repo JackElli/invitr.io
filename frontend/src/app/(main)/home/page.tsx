@@ -1,4 +1,4 @@
-import ActionButton from "@/app/lib/components/ActionButton";
+import ActionButton from "@/lib/components/ActionButton";
 
 export default async function HomePage() {
     return (

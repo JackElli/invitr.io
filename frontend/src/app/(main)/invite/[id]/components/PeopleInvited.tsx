@@ -1,4 +1,4 @@
-import { Invite } from "@/app/lib/services/InviteService"
+import { Invite } from "@/lib/services/InviteService"
 import Person from "./Person";
 
 type Props = {

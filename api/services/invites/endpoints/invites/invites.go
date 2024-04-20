@@ -9,7 +9,7 @@ import (
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
 	"invitr.io.com/responder"
-	invites_pkg "invitr.io.com/services/invites/endpoints/pkg"
+	invites_fetch "invitr.io.com/services/invites/fetch"
 	"invitr.io.com/services/invites/invitestore"
 )
 
@@ -30,10 +30,10 @@ type InviteMgr struct {
 	Router      *mux.Router
 	Responder   responder.Responder
 	InviteStore invitestore.InviteStorer
-	QRMgr       invites_pkg.IQRMgr
+	QRMgr       invites_fetch.IQRMgr
 }
 
-func NewInviteMgr(router *mux.Router, environment string, logger *zap.Logger, responder responder.Responder, invitestore invitestore.InviteStorer, qrmgr invites_pkg.IQRMgr) *InviteMgr {
+func NewInviteMgr(router *mux.Router, environment string, logger *zap.Logger, responder responder.Responder, invitestore invitestore.InviteStorer, qrmgr invites_fetch.IQRMgr) *InviteMgr {
 	e := &InviteMgr{
 		Env:         environment,
 		Logger:      logger,
@@ -49,13 +49,13 @@ func NewInviteMgr(router *mux.Router, environment string, logger *zap.Logger, re
 // NewInvite creates a new invite based on some user input
 func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
-		var getinvite invitestore.InviteDB
+		var getinvite invitestore.Invite
 		json.NewDecoder(req.Body).Decode(&getinvite)
 
 		// we need to check if the organiser is actually
 		// a registered user
 		if mgr.Env != "dev" {
-			_, err := invites_pkg.GetUser(getinvite.Organiser)
+			_, err := invites_fetch.GetUser(getinvite.Organiser)
 			if err != nil {
 				mgr.Responder.Error(w, 404, err)
 				return
@@ -68,7 +68,6 @@ func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request)
 
 			mgr.Logger.Error(err.Error())
 			mgr.Responder.Error(w, 400, err)
-
 			return
 		}
 
@@ -84,8 +83,12 @@ func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request)
 		// we could possibly send it as a byte array
 		// but we'll need to unmarshal it properly
 		qrcodeBytes := mgr.QRMgr.QrToBytes(*qrcode)
-		getinvite.QRCode = string(qrcodeBytes)
-		invite, err := mgr.InviteStore.Insert(&getinvite)
+		inviteDB := invitestore.InviteDB{
+			Invite: getinvite,
+			QRCode: string(qrcodeBytes),
+		}
+
+		invite, err := mgr.InviteStore.Insert(&inviteDB)
 		if err != nil {
 			mgr.Logger.Error(err.Error())
 			mgr.Responder.Error(w, 400, err)
@@ -94,15 +97,7 @@ func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request)
 
 		// return in the JSON format
 		inviteJSON := invitestore.InviteJSON{
-			Invite: invitestore.Invite{
-				Id:         invite.Id,
-				Title:      invite.Title,
-				Organiser:  invite.Organiser,
-				Location:   invite.Location,
-				Date:       invite.Date,
-				Passphrase: invite.Passphrase,
-				Invitees:   invite.Invitees,
-			},
+			Invite: invite.Invite,
 			QRCode: *qrcode,
 		}
 

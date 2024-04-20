@@ -1,5 +1,5 @@
-import ErrorCard from "@/app/lib/components/ErrorCard";
-import InviteService from "@/app/lib/services/InviteService";
+import ErrorCard from "@/lib/components/ErrorCard";
+import InviteService from "@/lib/services/InviteService";
 import PeopleInvited from "./components/PeopleInvited";
 import Notes from "./components/Notes";
 import InviteOverview from "./components/InviteOverview";

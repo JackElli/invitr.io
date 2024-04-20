@@ -1,5 +1,5 @@
 'use client'
-import InviteService, { Invite } from "@/app/lib/services/InviteService";
+import InviteService, { Invite } from "@/lib/services/InviteService";
 import { useState } from "react";
 
 type Props = {

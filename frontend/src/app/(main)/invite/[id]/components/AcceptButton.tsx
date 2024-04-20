@@ -1,6 +1,6 @@
 'use client'
-import Button from "@/app/lib/components/Button"
-import InviteService, { Invite } from "@/app/lib/services/InviteService";
+import Button from "@/lib/components/Button"
+import InviteService, { Invite } from "@/lib/services/InviteService";
 
 type Props = {
     invite: Invite;

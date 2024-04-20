@@ -1,4 +1,4 @@
-package invites_pkg
+package invites_fetch
 
 import (
 	qrcodes "invitr.io.com/services/qr-codes/endpoints/qr-codes"
