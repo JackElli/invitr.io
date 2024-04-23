@@ -6,6 +6,8 @@ The idea is to create a nice UI which organisers can log in to and create events
 
 ![dashboard](./images/dashboard.png)
 
+![event](./images/event.png)
+
 ## Getting started
 
 1)  ```
