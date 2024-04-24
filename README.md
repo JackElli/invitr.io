@@ -28,7 +28,7 @@ The idea is to create a nice UI which organisers can log in to and create events
         "location":"Manchester", 
         "date":"2024-08-10",
         "passphrase": "welcome",
-        "invitees": [{"name":"testuser"}]
+        "invitees": [{"id":"testuser"}]
         }
     ```
 5) To then see the invite send a GET request to 

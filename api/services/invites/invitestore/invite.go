@@ -27,3 +27,16 @@ type InviteJSON struct {
 	Invite
 	QRCode qrcodes.QRCode `json:"qr_code,omitempty"`
 }
+
+func InviteDBtoInvite(invite InviteDB) Invite {
+	return Invite{
+		Id:         invite.Id,
+		Title:      invite.Title,
+		Organiser:  invite.Organiser,
+		Location:   invite.Location,
+		Notes:      invite.Notes,
+		Date:       invite.Date,
+		Passphrase: invite.Passphrase,
+		Invitees:   invite.Invitees,
+	}
+}

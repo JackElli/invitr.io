@@ -47,7 +47,7 @@ func NewInviteMgr(router *mux.Router, environment string, logger *zap.Logger, re
 }
 
 // NewInvite creates a new invite based on some user input
-func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request) {
+func (mgr *InviteMgr) New() func(w http.ResponseWriter, req *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
 		var getinvite invitestore.Invite
 		json.NewDecoder(req.Body).Decode(&getinvite)
@@ -65,7 +65,6 @@ func (mgr *InviteMgr) NewInvite() func(w http.ResponseWriter, req *http.Request)
 		// check if the user has invited people
 		if len(getinvite.Invitees) == 0 {
 			err := errors.New("no-one was invited, you need to invite someone")
-
 			mgr.Logger.Error(err.Error())
 			mgr.Responder.Error(w, 400, err)
 			return
@@ -131,7 +130,7 @@ func (mgr *InviteMgr) AddNotes() func(w http.ResponseWriter, req *http.Request) 
 }
 
 // GetInvite retrieves an invite based on the id given
-func (mgr *InviteMgr) GetInvite() func(w http.ResponseWriter, req *http.Request) {
+func (mgr *InviteMgr) Get() func(w http.ResponseWriter, req *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
 		inviteId := mux.Vars(req)["inviteId"]
 
@@ -151,16 +150,9 @@ func (mgr *InviteMgr) GetInvite() func(w http.ResponseWriter, req *http.Request)
 		// return in the JSON format
 		qrcode := mgr.QRMgr.BytesToQR([]byte(invite.QRCode))
 		inviteJSON := invitestore.InviteJSON{
-			Invite: invitestore.Invite{
-				Id:         invite.Id,
-				Title:      invite.Title,
-				Organiser:  invite.Organiser,
-				Location:   invite.Location,
-				Notes:      invite.Notes,
-				Date:       invite.Date,
-				Passphrase: invite.Passphrase,
-				Invitees:   invite.Invitees,
-			},
+			// can be dereferenced because we already checked to
+			// see if it's nil
+			Invite: invitestore.InviteDBtoInvite(*invite),
 			QRCode: qrcode,
 		}
 
@@ -169,7 +161,7 @@ func (mgr *InviteMgr) GetInvite() func(w http.ResponseWriter, req *http.Request)
 }
 
 // ListInvitesByUser retrieves an invite based on the user given
-func (mgr *InviteMgr) ListInvitesByUser() func(w http.ResponseWriter, req *http.Request) {
+func (mgr *InviteMgr) ListByUser() func(w http.ResponseWriter, req *http.Request) {
 	return func(w http.ResponseWriter, req *http.Request) {
 		userId := mux.Vars(req)["userId"]
 
@@ -187,15 +179,7 @@ func (mgr *InviteMgr) ListInvitesByUser() func(w http.ResponseWriter, req *http.
 			qrcode := mgr.QRMgr.BytesToQR([]byte(invite.QRCode))
 			// return in the JSON format
 			inviteJSON := invitestore.InviteJSON{
-				Invite: invitestore.Invite{
-					Id:         invite.Id,
-					Title:      invite.Title,
-					Organiser:  invite.Organiser,
-					Location:   invite.Location,
-					Date:       invite.Date,
-					Passphrase: invite.Passphrase,
-					Invitees:   invite.Invitees,
-				},
+				Invite: invitestore.InviteDBtoInvite(invite),
 				QRCode: qrcode,
 			}
 
@@ -330,14 +314,16 @@ func (mgr *InviteMgr) GetOrganiserKey() func(w http.ResponseWriter, req *http.Re
 }
 
 func (mgr *InviteMgr) Register() {
-	mgr.Router.HandleFunc(BASE, mgr.NewInvite()).Methods("POST")
+	mgr.Router.HandleFunc(BASE, mgr.New()).Methods("POST")
 	mgr.Router.HandleFunc(NOTE, mgr.AddNotes()).Methods("POST")
 	mgr.Router.HandleFunc(EVENT, mgr.RespondToEvent()).Methods("POST")
 	mgr.Router.HandleFunc(KEY, mgr.GetUserFromKey()).Methods("POST")
-	// DANGER PLEASE LOCK THIS DOWN!!!
-	mgr.Router.HandleFunc(ORG_KEY, mgr.GetOrganiserKey()).Methods("GET")
 
-	mgr.Router.HandleFunc(INVITE, mgr.GetInvite()).Methods("GET")
-	mgr.Router.HandleFunc(USER, mgr.ListInvitesByUser()).Methods("GET")
+	/////DANGER PLEASE LOCK THIS DOWN!!!////
+	mgr.Router.HandleFunc(ORG_KEY, mgr.GetOrganiserKey()).Methods("GET")
+	////////////////////////////////////////
+
+	mgr.Router.HandleFunc(INVITE, mgr.Get()).Methods("GET")
+	mgr.Router.HandleFunc(USER, mgr.ListByUser()).Methods("GET")
 	mgr.Router.HandleFunc(EVENT, mgr.IsUserGoingToEvent()).Methods("GET")
 }
