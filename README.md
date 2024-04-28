@@ -2,7 +2,7 @@
 
 ## A project to make it easier for you to invite people to your events
 
-The idea is to create a nice UI which organisers can log in to and create events, from which they can invite people to. This could be weddings, business meetings, parties, etc... The recipient **SHOULD NOT** need to have an account to accept an invitation; the invitation should come in the form of a: personalised physical invitation or email with link (needs to be safe). Each invite should have a custom passphrase in order for the recipient to enter (for added security). The page that the recipient is taken to should have a big accept or reject button with the option to type a message. It should show where, when, who and when the event is finished, the same page is used for the summary page.
+The idea is to create an easy to use UI from which organisers can create events and invite their people. This could be weddings, business meetings, parties, etc... The recipient **SHOULD NOT** need to have an account to accept an invitation; the invitation should come in the form of a: personalised physical invitation or email with link (needs to be safe). Each invite should have a custom passphrase in order for the recipient to enter (for added security). The page that the recipient is taken to should have a big accept or reject button with the option to type a message. It should show where, when and who. When the event is finished, the same page should be used for the summary page.
 
 ![dashboard](./images/dashboard.png)
 
@@ -40,7 +40,7 @@ The idea is to create a nice UI which organisers can log in to and create events
 
 ## Future work
 
-- Create UI for the project, make sure it's easy to use, looks beautiful and responds quickly
+- Update the UI for the project, make sure it's easy to use, looks beautiful and responds quickly
 - Add Google / Apple log in ability
 - All calendar integration so meetings / events can be added quickly to a users calendar (we should also be able to accept / reject from the calendar)
 - We should have a meeting summary where the organiser can write notes / add images to the webpage and the invitees can access (with the passphrase) and see the highlights of the meeting. It should be very easy to remove if the organiser should choose to delete it.

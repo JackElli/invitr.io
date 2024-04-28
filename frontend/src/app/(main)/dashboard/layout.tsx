@@ -25,7 +25,7 @@ export default async function DashboardLayout({ children }: Readonly<{ children:
                 <div className="w-3/4 mx-auto mt-8">
                     <div className="flex gap-6">
                         <h1 className={`text-xl font-bold border-b-2 pb-1 border-b-gray-600 `}>Your events</h1>
-                        <input className="px-2 outline-none" placeholder="Filter..." />
+                        <input className="px-2 outline-none border border-gray-200 rounded-md" placeholder="Filter..." />
                     </div>
                     <div className="mt-4">
                         {children}
